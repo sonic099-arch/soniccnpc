@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "北田公司气井智能分析系统",
-    "description": "第一阶段 · 任务1：数据模型和基础管理接口。当前不含生产异常分析能力，仅供本地开发。",
-    "version": "0.1.0"
+    "description": "第一阶段 · 任务2：模拟数据与Excel确认导入。当前不含生产异常分析能力，仅供本地开发。",
+    "version": "0.2.0"
   },
   "paths": {
     "/health": {
@@ -38,6 +38,302 @@
             "content": {
               "application/json": {
                 "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/excel/fields": {
+      "get": {
+        "tags": [
+          "数据接入"
+        ],
+        "summary": "获取标准字段及支持单位",
+        "operationId": "fields_api_v1_excel_fields_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/excel/template": {
+      "get": {
+        "tags": [
+          "数据接入"
+        ],
+        "summary": "下载标准Excel模板或演示样例",
+        "operationId": "template_api_v1_excel_template_get",
+        "parameters": [
+          {
+            "name": "example",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Example"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/excel/preview": {
+      "post": {
+        "tags": [
+          "数据接入"
+        ],
+        "summary": "上传并识别字段（不导入数据）",
+        "operationId": "preview_api_v1_excel_preview_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_preview_api_v1_excel_preview_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportJobResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/excel/jobs/{job_id}/confirm": {
+      "post": {
+        "tags": [
+          "数据接入"
+        ],
+        "summary": "确认字段映射和单位后执行幂等导入",
+        "operationId": "confirm_api_v1_excel_jobs__job_id__confirm_post",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImportConfirmation"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportJobResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/excel/jobs/{job_id}": {
+      "get": {
+        "tags": [
+          "数据接入"
+        ],
+        "summary": "查询导入结果和前100条错误",
+        "operationId": "get_job_api_v1_excel_jobs__job_id__get",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportJobResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/excel/jobs/{job_id}/report": {
+      "get": {
+        "tags": [
+          "数据接入"
+        ],
+        "summary": "下载完整导入结果及错误行报告",
+        "operationId": "report_api_v1_excel_jobs__job_id__report_get",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/demo/scenarios": {
+      "get": {
+        "tags": [
+          "数据接入"
+        ],
+        "summary": "获取演示场景的预期状态和标签",
+        "operationId": "scenarios_api_v1_demo_scenarios_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/demo/generate": {
+      "post": {
+        "tags": [
+          "数据接入"
+        ],
+        "summary": "显式生成并加载演示井及措施、配置、测量记录",
+        "operationId": "generate_api_v1_demo_generate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DemoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -4470,6 +4766,31 @@
         "type": "object",
         "title": "AnomalyReviewUpdate"
       },
+      "Body_preview_api_v1_excel_preview_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "File"
+          },
+          "sheet": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sheet"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_preview_api_v1_excel_preview_post"
+      },
       "DataImportJobCreate": {
         "properties": {
           "source_type": {
@@ -4774,6 +5095,48 @@
         "type": "object",
         "title": "DataImportJobUpdate"
       },
+      "DemoRequest": {
+        "properties": {
+          "confirmed": {
+            "type": "boolean",
+            "const": true,
+            "title": "Confirmed"
+          },
+          "count": {
+            "type": "integer",
+            "maximum": 600.0,
+            "minimum": 13.0,
+            "title": "Count",
+            "default": 600
+          },
+          "days": {
+            "type": "integer",
+            "maximum": 31.0,
+            "minimum": 4.0,
+            "title": "Days",
+            "default": 14
+          },
+          "seed": {
+            "type": "integer",
+            "maximum": 4294967295.0,
+            "minimum": 0.0,
+            "title": "Seed",
+            "default": 20261021
+          },
+          "start": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Start",
+            "default": "2026-10-01T00:00:00Z"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "confirmed"
+        ],
+        "title": "DemoRequest"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -4786,6 +5149,147 @@
         },
         "type": "object",
         "title": "HTTPValidationError"
+      },
+      "ImportConfirmation": {
+        "properties": {
+          "confirmed": {
+            "type": "boolean",
+            "const": true,
+            "title": "Confirmed"
+          },
+          "mapping": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Mapping"
+          },
+          "units": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Units"
+          },
+          "timezone": {
+            "type": "string",
+            "title": "Timezone",
+            "default": "Asia/Shanghai"
+          },
+          "is_demo": {
+            "type": "boolean",
+            "title": "Is Demo",
+            "default": true
+          },
+          "create_missing_wells": {
+            "type": "boolean",
+            "title": "Create Missing Wells",
+            "default": false
+          },
+          "default_area": {
+            "type": "string",
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Default Area",
+            "default": "演示导入工区"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "confirmed",
+          "mapping",
+          "units"
+        ],
+        "title": "ImportConfirmation"
+      },
+      "ImportJobResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "filename": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Filename"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "total_rows": {
+            "type": "integer",
+            "title": "Total Rows"
+          },
+          "success_rows": {
+            "type": "integer",
+            "title": "Success Rows"
+          },
+          "failed_rows": {
+            "type": "integer",
+            "title": "Failed Rows"
+          },
+          "duplicate_rows": {
+            "type": "integer",
+            "title": "Duplicate Rows"
+          },
+          "errors": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Errors"
+          },
+          "error_count": {
+            "type": "integer",
+            "title": "Error Count"
+          },
+          "mapping": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Mapping"
+          },
+          "file_sha256": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "File Sha256"
+          },
+          "report_url": {
+            "type": "string",
+            "title": "Report Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "filename",
+          "status",
+          "total_rows",
+          "success_rows",
+          "failed_rows",
+          "duplicate_rows",
+          "errors",
+          "error_count",
+          "mapping",
+          "file_sha256",
+          "report_url"
+        ],
+        "title": "ImportJobResponse"
       },
       "ValidationError": {
         "properties": {

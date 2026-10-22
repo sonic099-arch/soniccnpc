@@ -52,3 +52,18 @@ curl -X POST http://localhost:8000/api/v1/wells \
 ```
 
 以上数值仅用于演示接口，不能作为现场标准。任务1没有异常分析结果，直接新增异常只是验证存储契约，不代表系统计算了该结论。
+
+## 任务2新增数据接入接口
+
+| 方法 | 路径（均带 /api/v1） | 作用 |
+|---|---|---|
+| GET | /excel/fields | 标准字段与单位 |
+| GET | /excel/template?example=false | 标准模板，example=true返回演示样例 |
+| POST | /excel/preview | multipart上传并预览，不写入测量 |
+| POST | /excel/jobs/{id}/confirm | 显式确认后导入 |
+| GET | /excel/jobs/{id} | 统计及前100条错误 |
+| GET | /excel/jobs/{id}/report | 完整错误行xlsx |
+| GET | /demo/scenarios | 13个场景及测试预期 |
+| POST | /demo/generate | 确认后生成并加载模拟批次 |
+
+映射、单位、时区、报告及幂等语义详见 `TASK2_GUIDE.md`。`/health` 的stage现为“任务2”，数据库迁移仍为0001_initial。

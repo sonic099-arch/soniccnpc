@@ -1,0 +1,691 @@
+{
+  "schema_version": "mock-v1",
+  "seed": 20261021,
+  "is_demo": true,
+  "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。",
+  "well_count": 13,
+  "measurement_count": 1242,
+  "wells": [
+    {
+      "id": "9e6ac2a4-3fcd-57e0-9f8b-e06c827617bb",
+      "well_number": "演示-BT-0001",
+      "area": "演示工区1",
+      "is_demo": true,
+      "description": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。 场景：稳定自喷井"
+    },
+    {
+      "id": "375e6d8a-31eb-5365-bfff-5e6d19c91c91",
+      "well_number": "演示-BT-0002",
+      "area": "演示工区2",
+      "is_demo": true,
+      "description": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。 场景：自然递减井"
+    },
+    {
+      "id": "2cd140e5-0829-5f8f-8a72-f8280c357724",
+      "well_number": "演示-BT-0003",
+      "area": "演示工区3",
+      "is_demo": true,
+      "description": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。 场景：异常减产井"
+    },
+    {
+      "id": "e502aac3-d807-57c2-8734-9203a62b93fa",
+      "well_number": "演示-BT-0004",
+      "area": "演示工区4",
+      "is_demo": true,
+      "description": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。 场景：疑似积液井"
+    },
+    {
+      "id": "5b63ffbe-fc71-51c8-9aa7-c3efbf0629ac",
+      "well_number": "演示-BT-0005",
+      "area": "演示工区1",
+      "is_demo": true,
+      "description": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。 场景：疑似冻堵井"
+    },
+    {
+      "id": "6cd8f48d-3c7e-5efd-929b-270fada6be64",
+      "well_number": "演示-BT-0006",
+      "area": "演示工区2",
+      "is_demo": true,
+      "description": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。 场景：正常泡排措施井"
+    },
+    {
+      "id": "fef71a87-379e-5be2-8295-5a6a3fc76607",
+      "well_number": "演示-BT-0007",
+      "area": "演示工区3",
+      "is_demo": true,
+      "description": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。 场景：泡排后生产效果不佳井"
+    },
+    {
+      "id": "778b2efc-2079-5944-8266-1c7cc01c3396",
+      "well_number": "演示-BT-0008",
+      "area": "演示工区4",
+      "is_demo": true,
+      "description": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。 场景：周期性生产井"
+    },
+    {
+      "id": "8f30bd46-b95e-5447-909b-b429a57a8e80",
+      "well_number": "演示-BT-0009",
+      "area": "演示工区1",
+      "is_demo": true,
+      "description": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。 场景：计划停井"
+    },
+    {
+      "id": "02b6313e-36af-5526-b101-604fd2f99186",
+      "well_number": "演示-BT-0010",
+      "area": "演示工区2",
+      "is_demo": true,
+      "description": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。 场景：非计划停井"
+    },
+    {
+      "id": "571f62c6-a93b-588a-ae57-a5a0f885c54e",
+      "well_number": "演示-BT-0011",
+      "area": "演示工区3",
+      "is_demo": true,
+      "description": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。 场景：数据冻结井"
+    },
+    {
+      "id": "49a84e2d-34c4-5705-b35d-a0a0845a9657",
+      "well_number": "演示-BT-0012",
+      "area": "演示工区4",
+      "is_demo": true,
+      "description": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。 场景：数据缺失井"
+    },
+    {
+      "id": "ff55cc38-aea5-5e57-aea9-6525ac98edab",
+      "well_number": "演示-BT-0013",
+      "area": "演示工区1",
+      "is_demo": true,
+      "description": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。 场景：累计流量复位井"
+    }
+  ],
+  "configurations": [
+    {
+      "well_id": "9e6ac2a4-3fcd-57e0-9f8b-e06c827617bb",
+      "production_mode": "注醇",
+      "configuration": {
+        "is_demo": true,
+        "demo_scenario": "stable",
+        "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+      },
+      "effective_start": "2026-10-01 00:00:00+00:00",
+      "effective_end": null
+    },
+    {
+      "well_id": "375e6d8a-31eb-5365-bfff-5e6d19c91c91",
+      "production_mode": "自喷",
+      "configuration": {
+        "is_demo": true,
+        "demo_scenario": "natural_decline",
+        "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+      },
+      "effective_start": "2026-10-01 00:00:00+00:00",
+      "effective_end": null
+    },
+    {
+      "well_id": "2cd140e5-0829-5f8f-8a72-f8280c357724",
+      "production_mode": "自喷",
+      "configuration": {
+        "is_demo": true,
+        "demo_scenario": "abnormal_decline",
+        "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+      },
+      "effective_start": "2026-10-01 00:00:00+00:00",
+      "effective_end": null
+    },
+    {
+      "well_id": "e502aac3-d807-57c2-8734-9203a62b93fa",
+      "production_mode": "自喷",
+      "configuration": {
+        "is_demo": true,
+        "demo_scenario": "liquid_hint",
+        "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+      },
+      "effective_start": "2026-10-01 00:00:00+00:00",
+      "effective_end": null
+    },
+    {
+      "well_id": "5b63ffbe-fc71-51c8-9aa7-c3efbf0629ac",
+      "production_mode": "自喷",
+      "configuration": {
+        "is_demo": true,
+        "demo_scenario": "freeze_hint",
+        "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+      },
+      "effective_start": "2026-10-01 00:00:00+00:00",
+      "effective_end": null
+    },
+    {
+      "well_id": "6cd8f48d-3c7e-5efd-929b-270fada6be64",
+      "production_mode": "泡排",
+      "configuration": {
+        "is_demo": true,
+        "demo_scenario": "foam_normal",
+        "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+      },
+      "effective_start": "2026-10-01 00:00:00+00:00",
+      "effective_end": null
+    },
+    {
+      "well_id": "fef71a87-379e-5be2-8295-5a6a3fc76607",
+      "production_mode": "泡排",
+      "configuration": {
+        "is_demo": true,
+        "demo_scenario": "foam_poor",
+        "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+      },
+      "effective_start": "2026-10-01 00:00:00+00:00",
+      "effective_end": null
+    },
+    {
+      "well_id": "778b2efc-2079-5944-8266-1c7cc01c3396",
+      "production_mode": "间歇",
+      "configuration": {
+        "is_demo": true,
+        "demo_scenario": "cyclic",
+        "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。",
+        "cycle": {
+          "period_hours": 24,
+          "open_hours": 8,
+          "anchor": "2026-10-01T00:00:00+00:00"
+        }
+      },
+      "effective_start": "2026-10-01 00:00:00+00:00",
+      "effective_end": null
+    },
+    {
+      "well_id": "8f30bd46-b95e-5447-909b-b429a57a8e80",
+      "production_mode": "自喷",
+      "configuration": {
+        "is_demo": true,
+        "demo_scenario": "planned_stop",
+        "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+      },
+      "effective_start": "2026-10-01 00:00:00+00:00",
+      "effective_end": null
+    },
+    {
+      "well_id": "02b6313e-36af-5526-b101-604fd2f99186",
+      "production_mode": "自喷",
+      "configuration": {
+        "is_demo": true,
+        "demo_scenario": "unplanned_stop",
+        "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+      },
+      "effective_start": "2026-10-01 00:00:00+00:00",
+      "effective_end": null
+    },
+    {
+      "well_id": "571f62c6-a93b-588a-ae57-a5a0f885c54e",
+      "production_mode": "自喷",
+      "configuration": {
+        "is_demo": true,
+        "demo_scenario": "frozen_data",
+        "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+      },
+      "effective_start": "2026-10-01 00:00:00+00:00",
+      "effective_end": null
+    },
+    {
+      "well_id": "49a84e2d-34c4-5705-b35d-a0a0845a9657",
+      "production_mode": "自喷",
+      "configuration": {
+        "is_demo": true,
+        "demo_scenario": "missing_data",
+        "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+      },
+      "effective_start": "2026-10-01 00:00:00+00:00",
+      "effective_end": null
+    },
+    {
+      "well_id": "ff55cc38-aea5-5e57-aea9-6525ac98edab",
+      "production_mode": "自喷",
+      "configuration": {
+        "is_demo": true,
+        "demo_scenario": "counter_reset",
+        "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+      },
+      "effective_start": "2026-10-01 00:00:00+00:00",
+      "effective_end": null
+    }
+  ],
+  "tools": [
+    {
+      "well_id": "9e6ac2a4-3fcd-57e0-9f8b-e06c827617bb",
+      "tool_type": "井下节流器",
+      "tool_name": "演示井筒工具",
+      "depth_m": 1500.0,
+      "parameters": {
+        "is_demo": true,
+        "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+      },
+      "effective_start": "2026-10-01 00:00:00+00:00",
+      "effective_end": null
+    },
+    {
+      "well_id": "375e6d8a-31eb-5365-bfff-5e6d19c91c91",
+      "tool_type": "井下节流器",
+      "tool_name": "演示井筒工具",
+      "depth_m": 1525.0,
+      "parameters": {
+        "is_demo": true,
+        "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+      },
+      "effective_start": "2026-10-01 00:00:00+00:00",
+      "effective_end": null
+    },
+    {
+      "well_id": "2cd140e5-0829-5f8f-8a72-f8280c357724",
+      "tool_type": "井下节流器",
+      "tool_name": "演示井筒工具",
+      "depth_m": 1550.0,
+      "parameters": {
+        "is_demo": true,
+        "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+      },
+      "effective_start": "2026-10-01 00:00:00+00:00",
+      "effective_end": null
+    },
+    {
+      "well_id": "e502aac3-d807-57c2-8734-9203a62b93fa",
+      "tool_type": "井下节流器",
+      "tool_name": "演示井筒工具",
+      "depth_m": 1575.0,
+      "parameters": {
+        "is_demo": true,
+        "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+      },
+      "effective_start": "2026-10-01 00:00:00+00:00",
+      "effective_end": null
+    },
+    {
+      "well_id": "5b63ffbe-fc71-51c8-9aa7-c3efbf0629ac",
+      "tool_type": "井下节流器",
+      "tool_name": "演示井筒工具",
+      "depth_m": 1600.0,
+      "parameters": {
+        "is_demo": true,
+        "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+      },
+      "effective_start": "2026-10-01 00:00:00+00:00",
+      "effective_end": null
+    },
+    {
+      "well_id": "6cd8f48d-3c7e-5efd-929b-270fada6be64",
+      "tool_type": "速度管柱",
+      "tool_name": "演示井筒工具",
+      "depth_m": 1625.0,
+      "parameters": {
+        "is_demo": true,
+        "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+      },
+      "effective_start": "2026-10-01 00:00:00+00:00",
+      "effective_end": null
+    },
+    {
+      "well_id": "fef71a87-379e-5be2-8295-5a6a3fc76607",
+      "tool_type": "速度管柱",
+      "tool_name": "演示井筒工具",
+      "depth_m": 1650.0,
+      "parameters": {
+        "is_demo": true,
+        "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+      },
+      "effective_start": "2026-10-01 00:00:00+00:00",
+      "effective_end": null
+    },
+    {
+      "well_id": "778b2efc-2079-5944-8266-1c7cc01c3396",
+      "tool_type": "井下节流器",
+      "tool_name": "演示井筒工具",
+      "depth_m": 1675.0,
+      "parameters": {
+        "is_demo": true,
+        "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+      },
+      "effective_start": "2026-10-01 00:00:00+00:00",
+      "effective_end": null
+    },
+    {
+      "well_id": "8f30bd46-b95e-5447-909b-b429a57a8e80",
+      "tool_type": "井下节流器",
+      "tool_name": "演示井筒工具",
+      "depth_m": 1700.0,
+      "parameters": {
+        "is_demo": true,
+        "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+      },
+      "effective_start": "2026-10-01 00:00:00+00:00",
+      "effective_end": null
+    },
+    {
+      "well_id": "02b6313e-36af-5526-b101-604fd2f99186",
+      "tool_type": "井下节流器",
+      "tool_name": "演示井筒工具",
+      "depth_m": 1725.0,
+      "parameters": {
+        "is_demo": true,
+        "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+      },
+      "effective_start": "2026-10-01 00:00:00+00:00",
+      "effective_end": null
+    },
+    {
+      "well_id": "571f62c6-a93b-588a-ae57-a5a0f885c54e",
+      "tool_type": "井下节流器",
+      "tool_name": "演示井筒工具",
+      "depth_m": 1750.0,
+      "parameters": {
+        "is_demo": true,
+        "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+      },
+      "effective_start": "2026-10-01 00:00:00+00:00",
+      "effective_end": null
+    },
+    {
+      "well_id": "49a84e2d-34c4-5705-b35d-a0a0845a9657",
+      "tool_type": "井下节流器",
+      "tool_name": "演示井筒工具",
+      "depth_m": 1775.0,
+      "parameters": {
+        "is_demo": true,
+        "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+      },
+      "effective_start": "2026-10-01 00:00:00+00:00",
+      "effective_end": null
+    },
+    {
+      "well_id": "ff55cc38-aea5-5e57-aea9-6525ac98edab",
+      "tool_type": "井下节流器",
+      "tool_name": "演示井筒工具",
+      "depth_m": 1800.0,
+      "parameters": {
+        "is_demo": true,
+        "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+      },
+      "effective_start": "2026-10-01 00:00:00+00:00",
+      "effective_end": null
+    }
+  ],
+  "measures": [
+    {
+      "well_id": "9e6ac2a4-3fcd-57e0-9f8b-e06c827617bb",
+      "measure_type": "注醇",
+      "effective_start": "2026-10-02 00:00:00+00:00",
+      "effective_end": "2026-10-02 12:00:00+00:00",
+      "parameters": {
+        "is_demo": true,
+        "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+      },
+      "notes": "演示排采事件"
+    },
+    {
+      "well_id": "6cd8f48d-3c7e-5efd-929b-270fada6be64",
+      "measure_type": "泡排",
+      "effective_start": "2026-10-04 06:00:00+00:00",
+      "effective_end": "2026-10-05 06:00:00+00:00",
+      "parameters": {
+        "is_demo": true,
+        "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+      },
+      "notes": "演示泡排事件"
+    },
+    {
+      "well_id": "fef71a87-379e-5be2-8295-5a6a3fc76607",
+      "measure_type": "泡排",
+      "effective_start": "2026-10-02 00:00:00+00:00",
+      "effective_end": "2026-10-03 00:00:00+00:00",
+      "parameters": {
+        "is_demo": true,
+        "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+      },
+      "notes": "演示泡排事件"
+    }
+  ],
+  "operations": [
+    {
+      "well_id": "778b2efc-2079-5944-8266-1c7cc01c3396",
+      "operation_type": "开井",
+      "planned": true,
+      "effective_start": "2026-10-01 00:00:00+00:00",
+      "effective_end": "2026-10-01 08:00:00+00:00",
+      "reason": "演示周期计划"
+    },
+    {
+      "well_id": "778b2efc-2079-5944-8266-1c7cc01c3396",
+      "operation_type": "关井",
+      "planned": true,
+      "effective_start": "2026-10-01 08:00:00+00:00",
+      "effective_end": "2026-10-02 00:00:00+00:00",
+      "reason": "演示周期计划"
+    },
+    {
+      "well_id": "778b2efc-2079-5944-8266-1c7cc01c3396",
+      "operation_type": "开井",
+      "planned": true,
+      "effective_start": "2026-10-02 00:00:00+00:00",
+      "effective_end": "2026-10-02 08:00:00+00:00",
+      "reason": "演示周期计划"
+    },
+    {
+      "well_id": "778b2efc-2079-5944-8266-1c7cc01c3396",
+      "operation_type": "关井",
+      "planned": true,
+      "effective_start": "2026-10-02 08:00:00+00:00",
+      "effective_end": "2026-10-03 00:00:00+00:00",
+      "reason": "演示周期计划"
+    },
+    {
+      "well_id": "778b2efc-2079-5944-8266-1c7cc01c3396",
+      "operation_type": "开井",
+      "planned": true,
+      "effective_start": "2026-10-03 00:00:00+00:00",
+      "effective_end": "2026-10-03 08:00:00+00:00",
+      "reason": "演示周期计划"
+    },
+    {
+      "well_id": "778b2efc-2079-5944-8266-1c7cc01c3396",
+      "operation_type": "关井",
+      "planned": true,
+      "effective_start": "2026-10-03 08:00:00+00:00",
+      "effective_end": "2026-10-04 00:00:00+00:00",
+      "reason": "演示周期计划"
+    },
+    {
+      "well_id": "778b2efc-2079-5944-8266-1c7cc01c3396",
+      "operation_type": "开井",
+      "planned": true,
+      "effective_start": "2026-10-04 00:00:00+00:00",
+      "effective_end": "2026-10-04 08:00:00+00:00",
+      "reason": "演示周期计划"
+    },
+    {
+      "well_id": "778b2efc-2079-5944-8266-1c7cc01c3396",
+      "operation_type": "关井",
+      "planned": true,
+      "effective_start": "2026-10-04 08:00:00+00:00",
+      "effective_end": "2026-10-05 00:00:00+00:00",
+      "reason": "演示周期计划"
+    },
+    {
+      "well_id": "8f30bd46-b95e-5447-909b-b429a57a8e80",
+      "operation_type": "关井",
+      "planned": true,
+      "effective_start": "2026-10-04 00:00:00+00:00",
+      "effective_end": null,
+      "reason": "演示：计划停井"
+    },
+    {
+      "well_id": "02b6313e-36af-5526-b101-604fd2f99186",
+      "operation_type": "关井",
+      "planned": false,
+      "effective_start": "2026-10-04 00:00:00+00:00",
+      "effective_end": null,
+      "reason": "演示：非计划停井"
+    }
+  ],
+  "expected": [
+    {
+      "well_number": "演示-BT-0001",
+      "scenario": "stable",
+      "scenario_name": "稳定自喷井",
+      "expected_production_state": "正常生产",
+      "expected_screening_status": "可信正常",
+      "expected_labels": [],
+      "onset": null,
+      "is_demo": true,
+      "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+    },
+    {
+      "well_number": "演示-BT-0002",
+      "scenario": "natural_decline",
+      "scenario_name": "自然递减井",
+      "expected_production_state": "自然递减生产",
+      "expected_screening_status": "可信正常",
+      "expected_labels": [],
+      "onset": null,
+      "is_demo": true,
+      "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+    },
+    {
+      "well_number": "演示-BT-0003",
+      "scenario": "abnormal_decline",
+      "scenario_name": "异常减产井",
+      "expected_production_state": "生产下降待核实",
+      "expected_screening_status": "疑似异常",
+      "expected_labels": [
+        "持续减产"
+      ],
+      "onset": "2026-10-03T00:00:00+00:00",
+      "is_demo": true,
+      "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+    },
+    {
+      "well_number": "演示-BT-0004",
+      "scenario": "liquid_hint",
+      "scenario_name": "疑似积液井",
+      "expected_production_state": "工况待核实",
+      "expected_screening_status": "疑似异常",
+      "expected_labels": [
+        "压力流量关联异常",
+        "疑似积液辅助提示"
+      ],
+      "onset": "2026-10-03T00:00:00+00:00",
+      "is_demo": true,
+      "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+    },
+    {
+      "well_number": "演示-BT-0005",
+      "scenario": "freeze_hint",
+      "scenario_name": "疑似冻堵井",
+      "expected_production_state": "工况待核实",
+      "expected_screening_status": "疑似异常",
+      "expected_labels": [
+        "低温及压力流量关联异常",
+        "疑似冻堵辅助提示"
+      ],
+      "onset": "2026-10-03T00:00:00+00:00",
+      "is_demo": true,
+      "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+    },
+    {
+      "well_number": "演示-BT-0006",
+      "scenario": "foam_normal",
+      "scenario_name": "正常泡排措施井",
+      "expected_production_state": "泡排措施期间",
+      "expected_screening_status": "措施影响",
+      "expected_labels": [
+        "措施影响"
+      ],
+      "onset": "2026-10-04T06:00:00+00:00",
+      "is_demo": true,
+      "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+    },
+    {
+      "well_number": "演示-BT-0007",
+      "scenario": "foam_poor",
+      "scenario_name": "泡排后生产效果不佳井",
+      "expected_production_state": "措施效果待核实",
+      "expected_screening_status": "疑似异常",
+      "expected_labels": [
+        "措施后未恢复"
+      ],
+      "onset": "2026-10-02T00:00:00+00:00",
+      "is_demo": true,
+      "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+    },
+    {
+      "well_number": "演示-BT-0008",
+      "scenario": "cyclic",
+      "scenario_name": "周期性生产井",
+      "expected_production_state": "按计划周期生产",
+      "expected_screening_status": "可信正常",
+      "expected_labels": [],
+      "onset": null,
+      "is_demo": true,
+      "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+    },
+    {
+      "well_number": "演示-BT-0009",
+      "scenario": "planned_stop",
+      "scenario_name": "计划停井",
+      "expected_production_state": "计划关井",
+      "expected_screening_status": "可信正常",
+      "expected_labels": [],
+      "onset": "2026-10-04T00:00:00+00:00",
+      "is_demo": true,
+      "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+    },
+    {
+      "well_number": "演示-BT-0010",
+      "scenario": "unplanned_stop",
+      "scenario_name": "非计划停井",
+      "expected_production_state": "非计划关井",
+      "expected_screening_status": "疑似异常",
+      "expected_labels": [
+        "非计划停井"
+      ],
+      "onset": "2026-10-04T00:00:00+00:00",
+      "is_demo": true,
+      "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+    },
+    {
+      "well_number": "演示-BT-0011",
+      "scenario": "frozen_data",
+      "scenario_name": "数据冻结井",
+      "expected_production_state": "数据待核实",
+      "expected_screening_status": "数据待核实",
+      "expected_labels": [
+        "数据冻结"
+      ],
+      "onset": "2026-10-04T00:00:00+00:00",
+      "is_demo": true,
+      "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+    },
+    {
+      "well_number": "演示-BT-0012",
+      "scenario": "missing_data",
+      "scenario_name": "数据缺失井",
+      "expected_production_state": "数据待核实",
+      "expected_screening_status": "数据待核实",
+      "expected_labels": [
+        "数据缺失"
+      ],
+      "onset": "2026-10-04T00:00:00+00:00",
+      "is_demo": true,
+      "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+    },
+    {
+      "well_number": "演示-BT-0013",
+      "scenario": "counter_reset",
+      "scenario_name": "累计流量复位井",
+      "expected_production_state": "计量待核实",
+      "expected_screening_status": "数据待核实",
+      "expected_labels": [
+        "累计量复位"
+      ],
+      "onset": "2026-10-03T00:00:00+00:00",
+      "is_demo": true,
+      "warning": "仅为演示数据；曲线、参数及预期标签不构成现场工艺判定标准或自动诊断。"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "database": "PostgreSQL 16.2",
+  "checks": [
+    {
+      "check": "600井全量入库",
+      "pass": true,
+      "details": {
+        "job_id": "d459cda8-9fae-479c-8d1f-f25ef9c51db9",
+        "well_count": 600,
+        "measurement_count": 201324,
+        "already_loaded": false
+      }
+    },
+    {
+      "check": "模拟批次重复加载",
+      "pass": true
+    },
+    {
+      "check": "600井Excel全量重复导入",
+      "pass": true,
+      "total_rows": 201324,
+      "duplicates": 201324,
+      "inserted": 0,
+      "errors": 0
+    },
+    {
+      "check": "全量记录及事件数量核对",
+      "pass": true,
+      "counts": {
+        "wells": 600,
+        "well_measurements": 201324,
+        "well_config_histories": 600,
+        "well_tools": 600,
+        "well_measure_events": 124,
+        "well_operation_events": 1380
+      }
+    }
+  ],
+  "elapsed_seconds": 147.85
+}

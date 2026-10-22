@@ -9,7 +9,7 @@ export const navigation = [
   {path:'/rules', name:'规则配置'},
 ]
 export default createRouter({history:createWebHistory(), routes:[
-  ...navigation.map(item=>({...item,component:SkeletonPage})),
+  ...navigation.map(item=>({...item,component:item.path==='/import'?()=>import('./views/DataImport.vue'):SkeletonPage})),
   {path:'/wells/:id',name:'单井分析',component:SkeletonPage},
   {path:'/:pathMatch(.*)*',redirect:'/'},
 ]})
