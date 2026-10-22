@@ -36,7 +36,7 @@ class ImportConfirmation(BaseModel):
 class DemoRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
     confirmed: Literal[True]
-    count: int = Field(default=600, ge=13, le=600)
+    count: int = Field(default=1000, ge=13, le=1000)
     days: int = Field(default=14, ge=4, le=31)
     seed: int = Field(default=20261021, ge=0, le=2**32-1)
     start: AwareDatetime = datetime(2026,10,1,tzinfo=timezone.utc)

@@ -5104,10 +5104,10 @@
           },
           "count": {
             "type": "integer",
-            "maximum": 600.0,
+            "maximum": 1000.0,
             "minimum": 13.0,
             "title": "Count",
-            "default": 600
+            "default": 1000
           },
           "days": {
             "type": "integer",

@@ -16,11 +16,11 @@ def small(): return MockDataSource(count=13,days=4).generate()
 @pytest.fixture(scope="module")
 def full(): return MockDataSource().generate()
 
-def test_six_hundred_wells_and_thirteen_scenarios(full):
-    assert len(full.wells)==600
-    assert len({w['id'] for w in full.wells})==600
+def test_one_thousand_wells_and_thirteen_scenarios(full):
+    assert len(full.wells)==1000
+    assert len({w['id'] for w in full.wells})==1000
     assert {e['scenario'] for e in full.expected}=={s[0] for s in SCENARIOS}
-    assert len(full.measurements)==201324
+    assert len(full.measurements)==335538
     assert all(w['is_demo'] and '演示' in w['description'] for w in full.wells)
     assert full.measurements['is_demo'].all()
 
@@ -127,3 +127,78 @@ def test_loaded_events_relate_to_well_and_configuration(session,small):
             event=session.scalar(select(WellMeasureEvent).where(WellMeasureEvent.well_id==well.id))
             assert event.measure_type=='泡排'
             assert event.effective_start.isoformat()==expected['onset']
+
+def test_expansion_appends_wells_preserving_existing_measurements(session):
+    old=MockDataSource(count=13,days=4).generate()
+    first=load_dataset(session,old)
+    # 兼容任务2旧版：来源任务没有source_well_count字段。
+    job=session.get(DataImportJob,UUID(first['job_id']))
+    job.mapping={k:v for k,v in job.mapping.items() if k not in {'source_well_count','added_wells','existing_wells'}}
+    session.commit()
+    before={str(r.id):(r.well_id,r.measured_at,r.instantaneous_flow_m3_h,r.import_job_id) for r in session.scalars(select(WellMeasurement))}
+    expanded=MockDataSource(count=26,days=4).generate()
+    result=load_dataset(session,expanded)
+    assert result['well_count']==26 and result['added_wells']==13
+    assert result['measurement_count']==2484 and result['added_measurements']==1242
+    after={str(r.id):(r.well_id,r.measured_at,r.instantaneous_flow_m3_h,r.import_job_id) for r in session.scalars(select(WellMeasurement).where(WellMeasurement.id.in_(before)))}
+    assert before==after
+    assert session.scalar(select(func.count()).select_from(WellConfigHistory))==26
+    assert session.scalar(select(func.count()).select_from(WellTool))==26
+    assert load_dataset(session,expanded)['added_wells']==0
+    assert session.scalar(select(func.count()).select_from(WellMeasurement))==2484
+
+@pytest.mark.parametrize('options',[{'seed':123},{'days':5},{'start':datetime(2026,11,1,tzinfo=timezone.utc)}])
+def test_expansion_rejects_incompatible_config_without_writes(session,options):
+    load_dataset(session,MockDataSource(count=13,days=4).generate())
+    args={'count':26,'days':4,**options}
+    with pytest.raises(ValueError,match='配置不同'):
+        load_dataset(session,MockDataSource(**args).generate())
+    assert session.scalar(select(func.count()).select_from(Well))==13
+    assert session.scalar(select(func.count()).select_from(WellMeasurement))==1242
+
+def test_expansion_rejects_user_well_collision(client,session):
+    response=client.post('/api/v1/wells',json={'well_number':'演示-BT-0001','area':'人工录入','is_demo':False})
+    assert response.status_code==201
+    with pytest.raises(ValueError,match='不会覆盖'):
+        load_dataset(session,MockDataSource(count=13,days=4).generate())
+    assert session.scalar(select(func.count()).select_from(Well))==1
+    assert session.scalar(select(func.count()).select_from(WellMeasurement))==0
+
+def test_expansion_rejects_incomplete_existing_data(session):
+    load_dataset(session,MockDataSource(count=13,days=4).generate())
+    row=session.scalar(select(WellMeasurement).limit(1));session.delete(row);session.commit()
+    with pytest.raises(ValueError,match='不完整'):
+        load_dataset(session,MockDataSource(count=26,days=4).generate())
+    assert session.scalar(select(func.count()).select_from(Well))==13
+    assert session.scalar(select(func.count()).select_from(WellMeasurement))==1241
+
+def test_first_six_hundred_curves_stable_when_growing_to_one_thousand(full):
+    old=MockDataSource(count=600).generate()
+    prefix=full.measurements.loc[full.measurements.well_number.isin({w['well_number'] for w in old.wells})].reset_index(drop=True)
+    pd.testing.assert_frame_equal(old.measurements,prefix)
+    assert old.wells==full.wells[:600]
+    assert {e['well_id'] for e in old.measures}.issubset({w['id'] for w in full.wells})
+
+def test_demo_api_defaults_to_thousand_and_rejects_over_limit(client,monkeypatch):
+    from app.api import imports as module
+    from app.api.imports import DemoRequest
+    assert DemoRequest(confirmed=True).count==1000
+    captured=[]
+    def loader(session,data):
+        captured.append(len(data.wells))
+        return {'well_count':len(data.wells)}
+    monkeypatch.setattr(module,'load_dataset',loader)
+    response=client.post('/api/v1/demo/generate',json={'confirmed':True,'days':4})
+    assert response.status_code==201 and captured==[1000]
+    assert client.post('/api/v1/demo/generate',json={'confirmed':True,'count':1001}).status_code==422
+
+def test_expansion_preserves_renamed_well_without_creating_duplicate(client,session):
+    load_dataset(session,MockDataSource(count=13,days=4).generate())
+    well=session.scalar(select(Well).where(Well.well_number=='演示-BT-0001'))
+    original_id=well.id
+    well.well_number='演示-人工改井号';session.commit()
+    response=client.post('/api/v1/demo/generate',json={'confirmed':True,'count':26,'days':4})
+    assert response.status_code==409 and '井号已变更' in response.json()['detail']
+    assert session.get(Well,original_id).well_number=='演示-人工改井号'
+    assert session.scalar(select(func.count()).select_from(Well))==13
+    assert session.scalar(select(func.count()).select_from(WellMeasurement))==1242

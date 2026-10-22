@@ -34,8 +34,8 @@ async function confirm(){
 async function generate(){
  loadingDemo.value=true;error.value=''
  try{
-  const result=await request<{well_count:number;measurement_count:number;already_loaded:boolean}>('/demo/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({confirmed:true,count:600,days:14,seed:20261021})})
-  demoResult.value=`${result.already_loaded?'这批演示数据已存在，本次未重复写入':'生成完成'}：${result.well_count}口井，${result.measurement_count}条测量记录。尚未执行异常分析。`
+  const result=await request<{well_count:number;measurement_count:number;already_loaded:boolean;added_wells:number;added_measurements:number}>('/demo/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({confirmed:true,count:1000,days:14,seed:20261021})})
+  demoResult.value=`${result.already_loaded?'这批演示数据已存在，本次未重复写入':'生成完成'}：${result.well_count}口井，${result.measurement_count}条测量记录；本次新增${result.added_wells}口井、${result.added_measurements}条记录。尚未执行异常分析。`
  }catch(e){error.value=(e as Error).message}finally{loadingDemo.value=false}
 }
 </script>
@@ -50,7 +50,7 @@ async function generate(){
    <input type="file" accept=".xlsx" :disabled="busy" aria-label="选择Excel文件" @change="choose"/>
    <el-input v-model="sheet" placeholder="工作表名称，可留空（优先选择“测量数据”）" style="max-width:440px;margin:16px 0" :disabled="busy"/>
    <p><el-button type="primary" :loading="busy" :disabled="!file||loadingDemo" @click="upload">上传并识别字段</el-button></p>
-   <p>限制：25 MiB、25万行、100列。当前仅导入测量工作表，事件通过演示生成器或措施接口管理。</p>
+   <p>限制：25 MiB、50万行、100列。当前仅导入测量工作表，事件通过演示生成器或措施接口管理。</p>
   </el-card>
   <el-card v-if="preview" shadow="never">
    <template #header>2. 确认字段映射、单位及关联方式</template>
@@ -81,12 +81,12 @@ async function generate(){
    <p v-if="job.error_count>100">此处展示前100条错误，完整错误见下载报告。</p>
   </el-card>
   <el-card shadow="never">
-   <template #header>生成600口气井演示数据</template>
+   <template #header>生成1000口气井演示数据</template>
    <p>固定随机种子，14天逐小时记录，覆盖13类场景。同时保存配置、井筒工具、措施和操作事件。生成或大文件导入可能需要几分钟，请勿关闭页面。</p>
    <el-checkbox v-model="demoAcknowledged" :disabled="loadingDemo">确认向当前开发数据库写入演示数据</el-checkbox>
-   <p><el-button :loading="loadingDemo" :disabled="!demoAcknowledged||busy" @click="generate">生成并加载600口演示井</el-button></p>
+   <p><el-button :loading="loadingDemo" :disabled="!demoAcknowledged||busy" @click="generate">生成并加载1000口演示井</el-button></p>
    <el-alert v-if="demoResult" :title="demoResult" type="success" :closable="false"/>
-   <p>同一批数据重复生成不会重复写入；已有同名演示井但配置不同会拒绝写入。异常分析将在任务3实现。</p>
+   <p>同一批数据重复生成不会重复写入；相同配置的600口演示井可直接扩容到1000口，保留原记录；配置不同会拒绝写入。异常分析将在任务3实现。</p>
   </el-card>
  </div>
 </template>

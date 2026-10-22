@@ -37,7 +37,7 @@ class MockDataset:
     seed: int
 
 class MockDataSource:
-    def __init__(self, count=600, days=14, seed=20261021,
+    def __init__(self, count=1000, days=14, seed=20261021,
                  start=datetime(2026, 10, 1, tzinfo=timezone.utc)):
         if not 13 <= count <= 5000 or not 4 <= days <= 90:
             raise ValueError("演示井数须为13至5000，天数须为4至90")

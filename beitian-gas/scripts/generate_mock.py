@@ -1,4 +1,4 @@
-"""在项目根目录运行：python scripts/generate_mock.py --count 600 --days 14 --output work/mock600 [--load]。"""
+"""在项目根目录运行：python scripts/generate_mock.py --count 1000 --days 14 --output work/mock1000 [--load]。"""
 import argparse
 import json
 from pathlib import Path
@@ -8,10 +8,10 @@ from app.services.demo import workbook_bytes, template_bytes, dataset_manifest, 
 
 def main():
     parser = argparse.ArgumentParser(description=DISCLAIMER)
-    parser.add_argument("--count",type=int,default=600)
+    parser.add_argument("--count",type=int,default=1000)
     parser.add_argument("--days",type=int,default=14)
     parser.add_argument("--seed",type=int,default=20261021)
-    parser.add_argument("--output",type=Path,default=Path("work/mock600"))
+    parser.add_argument("--output",type=Path,default=Path("work/mock1000"))
     parser.add_argument("--load",action="store_true",help="显式写入DATABASE_URL或.env指定的开发数据库")
     args=parser.parse_args()
     source=MockDataSource(args.count,args.days,args.seed)

@@ -1,8 +1,8 @@
 # 北田公司气井智能分析系统
 
-当前交付至 **任务2：可运行骨架、模拟数据生成与Excel确认导入**。后端 Python 3.12 / FastAPI / SQLAlchemy / PostgreSQL，前端 Vue3 / TypeScript / Element Plus，已安装 ECharts，数据处理使用 Pandas / NumPy / OpenPyXL。
+当前交付至 **任务2：可运行骨架、模拟数据生成与Excel确认导入**，默认演示规模已扩容至 **1000口井**。后端 Python 3.12 / FastAPI / SQLAlchemy / PostgreSQL，前端 Vue3 / TypeScript / Element Plus，已安装 ECharts，数据处理使用 Pandas / NumPy / OpenPyXL。
 
-已实现14个实体、基础CRUD、迁移、600井确定性模拟数据及带映射确认的Excel导入。异常分析引擎在任务3实现；首页统计、气井列表、异常列表及单井曲线在任务4实现。当前除Excel导入页外，业务页面仍明确显示占位提示。
+已实现14个实体、基础CRUD、迁移、1000井确定性模拟数据及带映射确认的Excel导入。异常分析引擎在任务3实现；首页统计、气井列表、异常列表及单井曲线在任务4实现。当前除Excel导入页外，业务页面仍明确显示占位提示。
 
 所有模拟数据、曲线、参数和预期标签均为演示用途，不构成现场工艺判定标准，也不能用于宣传生产异常筛查准确率。第七动态参数暂定“产液量”，尚待现场口径确认。
 
@@ -72,7 +72,7 @@ python scripts/dev.py
 3. 核对字段、源单位和时区。样例是新井，勾选“允许创建新井”，填写工区，保留“演示数据”。
 4. 勾选“我已确认映射、源单位、时区和数据性质”，点击“确认并导入”。首次预期成功3、失败0；再次上传同文件应重复3、新增0。
 5. 下载完整报告；有失败时，按Excel原始行号修正源文件后重新上传。
-6. 页面底部勾选演示数据确认，点击“生成并加载600口演示井”。预期600口井、201324条测量记录，以及配置、工具、措施和开关井事件。耗时可能为几十秒到几分钟，请等待。
+6. 页面底部勾选演示数据确认，点击“生成并加载1000口演示井”。预期1000口井、335538条测量记录，以及配置、工具、措施和开关井事件。耗时可能为几十秒到几分钟，请等待。
 
 可通过Swagger的 `GET /api/v1/wells` 查询井，通过 `GET /api/v1/measurements?well_id=某井UUID` 查询测量，通过 `GET /api/v1/measure-events?well_id=某井UUID` 查询措施。这里只验证数据接入，尚未输出异常分析结果。
 
@@ -81,7 +81,7 @@ python scripts/dev.py
 在项目根目录、已激活虚拟环境时执行：
 
 ```bash
-python scripts/generate_mock.py --count 600 --days 14 --seed 20261021 --output work/mock600
+python scripts/generate_mock.py --count 1000 --days 14 --seed 20261021 --output work/mock1000
 ```
 
 生成：
@@ -93,15 +93,15 @@ python scripts/generate_mock.py --count 600 --days 14 --seed 20261021 --output w
 
 参数支持13至5000口井、4至90天，单批最多100万条测量记录。默认固定起始时间2026-10-01 UTC、种子20261021。相同参数的记录、UUID、预期清单和xlsx字节均可重复。包含13类场景，详见 `docs/TASK2_GUIDE.md`。
 
-仓库 `examples/` 已提供标准模板、三行样例、13场景小样及其预期清单；完整600井文件约14MiB，运行脚本本地生成，不将大量重复演示文件提交Git。
+仓库 `examples/` 已提供标准模板、三行样例、13场景小样及其预期清单；完整1000井文件约23MiB，运行脚本本地生成，不将大量重复演示文件提交Git。
 
 如需脚本向 `.env` 或 `DATABASE_URL` 指定的开发库显式加载，先完成迁移，再添加 `--load`：
 
 ```bash
-python scripts/generate_mock.py --count 600 --days 14 --output work/mock600 --load
+python scripts/generate_mock.py --count 1000 --days 14 --output work/mock1000 --load
 ```
 
-快捷启动器使用的本地集群由网页“生成600井”按钮加载最方便；`--load`读取的是调用脚本时的数据库配置，不会自动接管快捷启动器的地址。同一配置重复加载不会重复写入；修改种子/井数/日期但占用相同演示井号会拒绝操作，避免混合两个模拟批次。
+快捷启动器使用的本地集群由网页“生成1000井”按钮加载最方便；`--load`读取的是调用脚本时的数据库配置，不会自动接管快捷启动器的地址。同一配置重复加载不会重复写入；保持种子、天数和起始时间不变，可以把旧版600口演示井扩容为1000口，只追加400口和134214条测量，保留原井ID、曲线及事件。更换种子/日期、人工井号冲突、井号已改或原数据不完整时会拒绝扩容。
 
 ## 常规PostgreSQL或Docker启动
 
@@ -141,18 +141,18 @@ python scripts/export_openapi.py
 
 后端测试只使用临时独立PostgreSQL，不访问`.env`数据库。前端测试包括真实组件交互，检查预览不写入、勾选确认后才允许提交、换文件清除旧确认状态。
 
-可选的600井整批验证（运行数分钟，独立临时数据库，结束后清理）：
+可选的1000井整批验证（运行数分钟，独立临时数据库，结束后清理）：
 
 ```bash
-python scripts/verify_demo.py --workbook work/mock600/mock-data.xlsx --report work/task2-full-check.json
+python scripts/verify_demo.py --workbook work/mock1000/mock-data.xlsx --report work/scale-full-check.json
 ```
 
-不传 `--workbook` 则自动生成默认600井文件在内存中验证。静态接口契约位于 `docs/openapi.json`；历史任务1报告保留，任务2结果见 `docs/TASK2_REPORT.md`。
+不传 `--workbook` 则自动生成默认1000井文件在内存中验证。静态接口契约位于 `docs/openapi.json`；历史报告保留，1000井扩容结果见 `docs/SCALE_1000_REPORT.md`。
 
 ## 目录与后续
 
 `backend/app/models`为14实体；`api`和`schemas`为基础接口；`data_sources`为Excel/Mock/Database统一接入；`services`为确认导入和演示装载；`migrations`为Alembic；`frontend/src/views/DataImport.vue`为可用导入页；`scripts`为启动、生成、验证和文档导出；`examples`为标准模板与模拟样本；`AGENTS.md`记录长期约束。
 
-代码同步至授权私有仓库 `sonic099-arch/soniccnpc` 的 `beitian-gas/`，保留仓库根README和历史；不提交 `.env`、虚拟环境、node_modules、本地数据库或用户上传的Excel。Excel暂存默认在 `work/imports`，可用 `IMPORT_STORAGE_DIR`更改，当前须由开发者按需清理；删除暂存文件后，未确认任务须重新上传。
+代码同步至用户授权仓库 `sonic099-arch/soniccnpc` 的 `beitian-gas/`，保留仓库根README和历史；不提交 `.env`、虚拟环境、node_modules、本地数据库或用户上传的Excel。Excel暂存默认在 `work/imports`，可用 `IMPORT_STORAGE_DIR`更改，当前须由开发者按需清理；删除暂存文件后，未确认任务须重新上传。
 
 接下来按顺序完成任务3分析引擎、任务4业务页面及曲线、任务5联调验收；本次只交付到任务2。

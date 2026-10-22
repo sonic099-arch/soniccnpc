@@ -31,7 +31,7 @@ ALLOWED_UNITS = {k: (["MPa", "kPa", "Pa", "bar"] if "pressure" in k else
                      ["℃", "K"] if k == "gas_temperature_c" else ["m³/d", "m³/h"])
                  for k, (_, u, _) in FIELDS.items() if u}
 MAX_UPLOAD = 25 * 1024 * 1024
-MAX_ROWS = 250_000
+MAX_ROWS = 500_000
 MAX_COLUMNS = 100
 
 def normal(text):
@@ -84,7 +84,7 @@ class ExcelDataSource:
                 if len(values) > MAX_COLUMNS: raise ValueError("工作表超过100列")
                 if not any(v is not None and str(v).strip() for v in values): continue
                 count += 1
-                if count > MAX_ROWS: raise ValueError("单次导入最多25万条记录")
+                if count > MAX_ROWS: raise ValueError("单次导入最多50万条记录")
                 yield rowno, dict(zip(headers, values))
         finally:
             book.close()

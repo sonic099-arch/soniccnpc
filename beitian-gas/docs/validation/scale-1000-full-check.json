@@ -1,0 +1,52 @@
+{
+  "checks": [
+    {
+      "check": "兼容旧版600井来源记录",
+      "pass": true,
+      "measurement_count": 201324
+    },
+    {
+      "check": "600井无损扩容到1000井",
+      "pass": true,
+      "details": {
+        "job_id": "78c8d942-b05f-4867-9690-3c8d3fe3858b",
+        "well_count": 1000,
+        "measurement_count": 335538,
+        "already_loaded": false,
+        "added_wells": 400,
+        "added_measurements": 134214
+      }
+    },
+    {
+      "check": "原600井及曲线配置工具事件完全保留",
+      "pass": true,
+      "sha256": "7f1153d75cae813b47bf80896d6f9c58d033e9091944a9ecb02127bcd0b31b15"
+    },
+    {
+      "check": "模拟批次重复加载",
+      "pass": true
+    },
+    {
+      "check": "1000井Excel全量重复导入",
+      "pass": true,
+      "total_rows": 335538,
+      "duplicates": 335538,
+      "inserted": 0,
+      "errors": 0
+    },
+    {
+      "check": "全量记录及事件数量核对",
+      "pass": true,
+      "counts": {
+        "wells": 1000,
+        "well_measurements": 335538,
+        "well_config_histories": 1000,
+        "well_tools": 1000,
+        "well_measure_events": 206,
+        "well_operation_events": 2310
+      }
+    }
+  ],
+  "database": "PostgreSQL 16.2 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 10.2.1 20210130 (Red Hat 10.2.1-11), 64-bit",
+  "elapsed_seconds": 258.18
+}

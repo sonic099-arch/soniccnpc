@@ -10,7 +10,7 @@ import pandas as pd
 from openpyxl import Workbook
 from openpyxl.cell import WriteOnlyCell
 from openpyxl.styles import Font, PatternFill
-from sqlalchemy import select, text
+from sqlalchemy import select, text, func, or_
 from sqlalchemy.dialects.postgresql import insert
 from app.data_sources.excel import FIELDS
 from app.data_sources.mock import DISCLAIMER, MockDataset, MockDataSource
@@ -109,37 +109,91 @@ def workbook_bytes(dataset):
     return deterministic_xlsx(book)
 
 
+
+def _signature(dataset, well_count):
+    prefix = {w["well_number"] for w in dataset.wells[:well_count]}
+    frame = dataset.measurements.loc[dataset.measurements.well_number.isin(prefix)]
+    start = frame.measured_at.min().isoformat()
+    return sha256(json.dumps(["mock-v1",dataset.seed,well_count,len(frame),start], ensure_ascii=False).encode()).hexdigest()
+
+
+def _validate_existing(session, dataset, existing):
+    """仅允许同一生成配置的完整历史前缀扩容；既有测量和人工复核不作改写。"""
+    if not existing: return
+    message = "演示井号已存在但生成配置不同、井号已变更或原数据不完整；请保持种子、天数、起始时间一致，不会覆盖已有数据"
+    expected = {w["well_number"]:w for w in dataset.wells}
+    for well in existing:
+        if well.well_number not in expected or not well.is_demo or well.id != expected[well.well_number]["id"]:
+            raise ValueError(message)
+    existing_by_id = {w.id:w for w in existing}
+    # 原版本只在mapping保存种子，通过实际来源任务成员数兼容旧600井批次。
+    groups = session.execute(select(WellMeasurement.well_id,WellMeasurement.import_job_id,
+                WellMeasurement.source_type,WellMeasurement.is_demo,func.count(),
+                func.min(WellMeasurement.measured_at),func.max(WellMeasurement.measured_at))
+                .where(WellMeasurement.well_id.in_(existing_by_id))
+                .group_by(WellMeasurement.well_id,WellMeasurement.import_job_id,
+                          WellMeasurement.source_type,WellMeasurement.is_demo)).all()
+    if len(groups) != len(existing): raise ValueError(message)
+    stats = dataset.measurements.groupby("well_number").measured_at.agg(["count","min","max"])
+    job_ids = {g[1] for g in groups}
+    if None in job_ids: raise ValueError(message)
+    jobs = {j.id:j for j in session.scalars(select(DataImportJob).where(DataImportJob.id.in_(job_ids)))}
+    for job_id in job_ids:
+        job = jobs.get(job_id)
+        if job is None or job.source_type != "mock" or job.status != "已完成": raise ValueError(message)
+        if job.mapping.get("generator") != "mock-v1" or job.mapping.get("seed") != dataset.seed: raise ValueError(message)
+        source_count = job.mapping.get("source_well_count")
+        if source_count is None:
+            source_count = session.scalar(select(func.count(func.distinct(WellMeasurement.well_id)))
+                                          .where(WellMeasurement.import_job_id==job_id))
+        if not isinstance(source_count,int) or not 13 <= source_count <= len(dataset.wells): raise ValueError(message)
+        if job.file_sha256 != _signature(dataset,source_count): raise ValueError(message)
+    for well_id, job_id, source_type, is_demo, count, first, last in groups:
+        expected_stats = stats.loc[existing_by_id[well_id].well_number]
+        if source_type != "mock" or not is_demo or count != expected_stats["count"]:
+            raise ValueError(message)
+        if first != expected_stats["min"] or last != expected_stats["max"]: raise ValueError(message)
+
+
 def load_dataset(session, dataset):
-    start = dataset.measurements.measured_at.min().isoformat()
-    signature = sha256(json.dumps(["mock-v1",dataset.seed,len(dataset.wells),len(dataset.measurements),start], ensure_ascii=False).encode()).hexdigest()
-    # 防止两个演示加载任务同时创建同一批稳定井ID。
+    signature = _signature(dataset,len(dataset.wells))
     session.execute(text("SELECT pg_advisory_xact_lock(1862400202)"))
-    previous = session.scalar(select(DataImportJob).where(DataImportJob.source_type=="mock",DataImportJob.file_sha256==signature,DataImportJob.status=="已完成"))
-    if previous:
-        session.commit()
-        return {"job_id":str(previous.id),"well_count":len(dataset.wells),"measurement_count":previous.total_rows,"already_loaded":True}
     numbers = [w["well_number"] for w in dataset.wells]
-    if session.scalar(select(Well.id).where(Well.well_number.in_(numbers)).limit(1)):
-        raise ValueError("演示井号已存在但生成配置不同；请使用同一随机种子、井数、天数和起始时间，或使用独立演示数据库")
+    existing = list(session.scalars(select(Well).where(or_(Well.well_number.in_(numbers),Well.id.in_([w["id"] for w in dataset.wells])))))
+    _validate_existing(session,dataset,existing)
+    previous = session.scalar(select(DataImportJob).where(DataImportJob.source_type=="mock",DataImportJob.file_sha256==signature,DataImportJob.status=="已完成"))
+    if previous and len(existing) == len(dataset.wells):
+        session.commit()
+        return {"job_id":str(previous.id),"well_count":len(dataset.wells),"measurement_count":len(dataset.measurements),
+                "already_loaded":True,"added_wells":0,"added_measurements":0}
+    present_numbers = {w.well_number for w in existing}
+    new_wells = [w for w in dataset.wells if w["well_number"] not in present_numbers]
+    new_ids = {w["id"] for w in new_wells}
+    new_numbers = {w["well_number"] for w in new_wells}
+    frame = dataset.measurements.loc[dataset.measurements.well_number.isin(new_numbers)]
+    new_count = len(frame)
     job = DataImportJob(source_type="mock",file_sha256=signature,status="已完成",filename="确定性演示数据",
-                        mapping={"generator":"mock-v1","seed":dataset.seed,"is_demo":True,"warning":DISCLAIMER},
-                        total_rows=len(dataset.measurements),success_rows=len(dataset.measurements),
-                        failed_rows=0,duplicate_rows=0,errors=[],completed_at=datetime.now(timezone.utc))
+                        mapping={"generator":"mock-v1","seed":dataset.seed,"is_demo":True,"warning":DISCLAIMER,
+                                 "source_well_count":len(dataset.wells),"added_wells":len(new_wells),
+                                 "existing_wells":len(existing)},
+                        total_rows=len(dataset.measurements),success_rows=new_count,
+                        failed_rows=0,duplicate_rows=len(dataset.measurements)-new_count,errors=[],completed_at=datetime.now(timezone.utc))
     session.add(job); session.flush()
-    session.execute(insert(Well), dataset.wells)
+    if new_wells: session.execute(insert(Well), new_wells)
     for model, records in [(WellConfigHistory,dataset.configurations),(WellTool,dataset.tools),(WellMeasureEvent,dataset.measures),(WellOperationEvent,dataset.operations)]:
+        records = [record for record in records if record["well_id"] in new_ids]
         if records:
             payload = [{**record,"id":uuid5(NAMESPACE_URL,f"beitian/mock/{dataset.seed}/{model.__tablename__}/{record['well_id']}/{record['effective_start']}/{record.get('operation_type','')}")} for record in records]
             for offset in range(0,len(payload),500): session.execute(insert(model),payload[offset:offset+500])
-    well_ids = {w["well_number"]:w["id"] for w in dataset.wells}
-    rows = dataset.measurements.astype(object).where(pd.notna(dataset.measurements),None).to_dict("records")
+    well_ids = {w["well_number"]:w["id"] for w in new_wells}
+    rows = frame.astype(object).where(pd.notna(frame),None).to_dict("records")
     for offset in range(0,len(rows),1000):
         payload=[]
         for row in rows[offset:offset+1000]:
             data = dict(row); number=data.pop("well_number")
             flags=["缺失:"+key for key,value in data.items() if value is None]
             payload.append({**data,"well_id":well_ids[number],"quality_flags":flags,"source_type":"mock","import_job_id":job.id})
-        # render_nulls 防止缺失参数导致ORM executemany逐条退化。
         session.execute(insert(WellMeasurement),payload,execution_options={"render_nulls":True})
     session.commit()
-    return {"job_id":str(job.id),"well_count":len(dataset.wells),"measurement_count":len(dataset.measurements),"already_loaded":False}
+    return {"job_id":str(job.id),"well_count":len(dataset.wells),"measurement_count":len(dataset.measurements),
+            "already_loaded":not new_wells,"added_wells":len(new_wells),"added_measurements":new_count}

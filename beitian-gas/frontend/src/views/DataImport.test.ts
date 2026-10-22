@@ -50,3 +50,15 @@ it('重新选择文件会清除旧预览和确认状态',async()=>{
  expect(view.findAll('button').some(b=>b.text()==='确认并导入')).toBe(false)
  expect(fetchMock.mock.calls.filter(([path])=>String(path).endsWith('/confirm'))).toHaveLength(0)
 })
+it('演示生成入口默认请求1000井，展示本次新增数量',async()=>{
+ fetchMock.mockImplementation(async(path:string)=>({ok:true,json:async()=>path.endsWith('/fields')?fields:{well_count:1000,measurement_count:335538,already_loaded:false,added_wells:400,added_measurements:134214}}))
+ wrapper=mount(DataImport,{global:{plugins:[ElementPlus]}})
+ await flushPromises()
+ const acknowledgement=wrapper.findAll('label.el-checkbox').find(label=>label.text().includes('确认向当前开发数据库写入演示数据'))!
+ await acknowledgement.find('input').setValue(true)
+ const button=wrapper.findAll('button').find(b=>b.text()==='生成并加载1000口演示井')!
+ await button.trigger('click');await flushPromises()
+ const call=fetchMock.mock.calls.find(([path])=>String(path).endsWith('/demo/generate'))!
+ expect(JSON.parse((call[1] as RequestInit).body as string).count).toBe(1000)
+ expect(wrapper.text()).toContain('本次新增400口井、134214条记录')
+})

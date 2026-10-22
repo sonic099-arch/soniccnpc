@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="9" failures="0" errors="0" time="1.03718379">
+    <testsuite name="src/api.test.ts" timestamp="2026-10-22T14:03:30.079Z" hostname="43cc177f0c14" tests="2" failures="0" errors="0" skipped="0" time="0.004842253">
+        <testcase classname="src/api.test.ts" name="读取后端健康状态" time="0.002574607">
+        </testcase>
+        <testcase classname="src/api.test.ts" name="后端错误显示中文提示" time="0.001402449">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/importApi.test.ts" timestamp="2026-10-22T14:03:30.080Z" hostname="43cc177f0c14" tests="4" failures="0" errors="0" skipped="0" time="0.005263393">
+        <testcase classname="src/importApi.test.ts" name="上传预览保留FormData，不错误设置JSON头" time="0.002673113">
+        </testcase>
+        <testcase classname="src/importApi.test.ts" name="确认配置保留单位和时区，移除未选字段" time="0.000252282">
+        </testcase>
+        <testcase classname="src/importApi.test.ts" name="接口错误显示服务端中文原因" time="0.001239118">
+        </testcase>
+        <testcase classname="src/importApi.test.ts" name="非JSON错误回退中文提示" time="0.000348143">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/views/DataImport.test.ts" timestamp="2026-10-22T14:03:30.081Z" hostname="43cc177f0c14" tests="3" failures="0" errors="0" skipped="0" time="1.027078144">
+        <testcase classname="src/views/DataImport.test.ts" name="预览不会写入，只有勾选确认后才能执行导入并显示结果" time="0.677387194">
+        </testcase>
+        <testcase classname="src/views/DataImport.test.ts" name="重新选择文件会清除旧预览和确认状态" time="0.337043767">
+        </testcase>
+        <testcase classname="src/views/DataImport.test.ts" name="演示生成入口默认请求1000井，展示本次新增数量" time="0.01165474">
+        </testcase>
+    </testsuite>
+</testsuites>
