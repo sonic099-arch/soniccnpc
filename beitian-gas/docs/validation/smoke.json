@@ -1,0 +1,32 @@
+[
+  {
+    "url": "http://127.0.0.1:8000/health",
+    "status": 200,
+    "body": "{\"status\":\"ok\",\"stage\":\"任务1\"}"
+  },
+  {
+    "url": "http://127.0.0.1:8000/ready",
+    "status": 200,
+    "body": "{\"status\":\"ok\",\"revision\":\"0001_initial\"}"
+  },
+  {
+    "url": "http://127.0.0.1:8000/docs",
+    "status": 200,
+    "body": "HTML响应有效"
+  },
+  {
+    "url": "http://127.0.0.1:5173/",
+    "status": 200,
+    "body": "HTML响应有效"
+  },
+  {
+    "url": "http://127.0.0.1:5173/health",
+    "status": 200,
+    "body": "{\"status\":\"ok\",\"stage\":\"任务1\"}"
+  },
+  {
+    "url": "http://127.0.0.1:5173/api/v1/wells",
+    "status": 200,
+    "body": "{\"items\":[],\"total\":0,\"offset\":0,\"limit\":50}"
+  }
+]

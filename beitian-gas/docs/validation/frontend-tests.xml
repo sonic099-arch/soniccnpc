@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="2" failures="0" errors="0" time="0.005195494">
+    <testsuite name="src/api.test.ts" timestamp="2026-10-21T14:57:27.935Z" hostname="43cc177f0c14" tests="2" failures="0" errors="0" skipped="0" time="0.005195494">
+        <testcase classname="src/api.test.ts" name="读取后端健康状态" time="0.00279933">
+        </testcase>
+        <testcase classname="src/api.test.ts" name="后端错误显示中文提示" time="0.001335936">
+        </testcase>
+    </testsuite>
+</testsuites>
