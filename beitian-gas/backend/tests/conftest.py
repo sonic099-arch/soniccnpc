@@ -12,7 +12,7 @@ from pgserver import get_server
 
 os.environ["DATABASE_URL"] = "postgresql+psycopg:///beitian_test_unused"
 from app.core.config import get_settings
-from app.core.database import get_session
+from app.core.database import get_session, get_analysis_session
 from app.main import app
 
 @pytest.fixture(scope="session")
@@ -48,6 +48,7 @@ def session(engine):
 @pytest.fixture
 def client(session, engine, monkeypatch):
     app.dependency_overrides[get_session] = lambda: session
+    app.dependency_overrides[get_analysis_session] = lambda: session
     monkeypatch.setattr("app.main.get_engine", lambda: engine)
     with TestClient(app) as c:
         yield c

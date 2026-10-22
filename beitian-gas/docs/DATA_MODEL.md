@@ -1,4 +1,4 @@
-# 数据字典（任务1）
+# 数据字典（任务1至3）
 
 所有实体均有UUID主键id、创建时间created_at。字段名携带单位；详细请求与响应类型以openapi.json为准。
 
@@ -361,3 +361,22 @@
 - `ix_well_status_snapshots_analysis_run_id`：analysis_run_id
 - `ix_well_status_snapshots_screening_status`：screening_status
 
+
+## WellAnalysisResult — 每次分析的单井历史结果（任务3新增）
+
+表 `well_analysis_results`，迁移 `0002_analysis_results`。读取 `/api/v1/analysis/results` 与 `/api/v1/analysis/results/{id}`；不开放基础CRUD，写入由分析服务统一完成。
+
+| 字段 | PostgreSQL类型 | 约束或含义 |
+|---|---|---|
+| id | UUID | 主键 |
+| created_at | TIMESTAMPTZ | 创建时间 |
+| well_id | UUID | 外键wells.id，RESTRICT |
+| analysis_run_id | UUID | 外键analysis_runs.id，RESTRICT |
+| as_of | TIMESTAMPTZ | 本次分析窗口结束时间（不含） |
+| screening_status | VARCHAR(40) | 五种筛查状态CHECK |
+| production_state | VARCHAR(40) | 中文生产状态 |
+| evidence | JSON | 逐条规则结果、上下文、基线、原始输入摘要 |
+
+唯一约束 `uq_analysis_result_run_well(analysis_run_id, well_id)`；索引well_id、analysis_run_id、screening_status。与Well、AnalysisRun都是多对一。保留历史正常与异常井结果；WellStatusSnapshot仍是一井一条最新状态。重复分析创建新任务，默认异常列表仅关联最新快照，历史任务显式按run_id读取。
+
+数据库总计15个业务实体、15张业务表，另有Alembic版本表。历史表格中的CHAR(32)、DATETIME为通用SQLAlchemy显示；PostgreSQL实际UUID、TIMESTAMPTZ口径不变。

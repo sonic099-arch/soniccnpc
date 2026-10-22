@@ -12,7 +12,7 @@ from app.data_sources.base import DatabaseDataSource, MeasurementRecord
 def test_migration_model_no_drift(engine):
     with engine.connect() as conn:
         assert compare_metadata(MigrationContext.configure(conn, opts={"compare_type":True}), Base.metadata) == []
-    assert len(inspect(engine).get_table_names()) == 15  # 14实体 + alembic_version
+    assert len(inspect(engine).get_table_names()) == 16  # 15实体 + alembic_version
 
 
 def test_migration_upgrade_downgrade_roundtrip(migrated_database):
@@ -21,7 +21,7 @@ def test_migration_upgrade_downgrade_roundtrip(migrated_database):
     command.downgrade(config, "base")
     assert inspect(engine).get_table_names() == ["alembic_version"]
     command.upgrade(config, "head")
-    assert len(inspect(engine).get_table_names()) == 15
+    assert len(inspect(engine).get_table_names()) == 16
 
 
 def test_actual_postgresql(engine):

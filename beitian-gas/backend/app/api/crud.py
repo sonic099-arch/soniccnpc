@@ -7,6 +7,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from app.core.database import get_session
 from app.schemas.factory import build_schemas, normalize_times
+from app.services.immutability import protect_update,protect_create
 
 SessionDep = Annotated[Session, Depends(get_session)]
 
@@ -52,7 +53,9 @@ def create_crud_router(slug, model, label):
 
     @router.post("", response_model=Read, status_code=201, summary=f"新增{label}")
     def create_record(payload: Create, session: SessionDep):
-        row = model(**checked_values(payload))
+        values=checked_values(payload)
+        protect_create(session,model,values)
+        row = model(**values)
         session.add(row)
         commit(session)
         session.refresh(row)
@@ -65,6 +68,7 @@ def create_crud_router(slug, model, label):
     @router.patch("/{record_id}", response_model=Read, summary=f"更新{label}")
     def update_record(record_id: UUID, payload: Update, session: SessionDep):
         row = find(session, record_id)
+        protect_update(session,row,payload.model_dump(exclude_unset=True))
         # 合并后再验证，保证只改结束时间也能检测非法区间，非空列不能被 PATCH 清空。
         values = {name: getattr(row, name) for name in Create.model_fields}
         values.update(payload.model_dump(exclude_unset=True))
@@ -80,7 +84,9 @@ def create_crud_router(slug, model, label):
 
     @router.delete("/{record_id}", status_code=204, summary=f"删除{label}")
     def delete_record(record_id: UUID, session: SessionDep):
-        session.delete(find(session, record_id))
+        row=find(session,record_id)
+        protect_update(session,row,deleting=True)
+        session.delete(row)
         commit(session)
         return Response(status_code=204)
     return router

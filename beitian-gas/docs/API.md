@@ -66,4 +66,25 @@ curl -X POST http://localhost:8000/api/v1/wells \
 | GET | /demo/scenarios | 13个场景及测试预期 |
 | POST | /demo/generate | 确认后生成并加载模拟批次 |
 
-映射、单位、时区、报告及幂等语义详见 `TASK2_GUIDE.md`。`/health` 的stage现为“任务2”，数据库迁移仍为0001_initial。
+映射、单位、时区、报告及幂等语义详见 `TASK2_GUIDE.md`。任务3后 `/health` 的stage为“任务3”，`/ready` 要求迁移0002_analysis_results。
+
+## 任务3分析接口
+
+| 方法 | 路径（均带 /api/v1/analysis） | 作用 |
+|---|---|---|
+| POST | /rules/bootstrap | `{"confirmed":true}` 初始化11条演示规则，不覆盖现有配置 |
+| GET | /rules | 当前规则及数值配置约束 |
+| POST | /rules/{code}/versions | 发布新版本，须传完整configuration；停用旧版 |
+| POST | /execute | `{"confirmed":true}` 同步执行，可传well_ids、area、window_start/window_end |
+| GET | /runs | 分页查看历史任务 |
+| GET | /runs/{id} | 任务、时间窗、统计和规则快照 |
+| GET | /results | 逐井结果；默认最新，支持run_id、well_id、search、area、screening_status |
+| GET | /results/{id} | 全部规则判断和生产上下文 |
+| GET | /anomalies | 默认最新且排除可信正常井；支持run_id、well_id、search、area、anomaly_type |
+| GET | /anomalies/{id} | 原始代表采样、规则快照和同指纹跨任务复核记录 |
+
+所有执行时间须含时区。默认窗口终点为所选井最新采样加一个采样周期，最长窗口由SYS001配置限制。1000井执行是同步请求，前端超时设为10分钟。并发分析用PostgreSQL事务锁互斥，已有执行返回409；失败回滚结果后保留失败任务。服务进程被强制终止时事务回滚，当前没有队列、恢复或取消接口。
+
+基础CRUD继续供开发使用，但已使用规则的内容不能改写或删除，启用标记可调整；推荐版本接口。引擎任务、结果及已有复核记录不可改写，返回409。人工复核仍通过 `POST /api/v1/reviews` 追加；新实体WellAnalysisResult仅通过分析接口写入和读取，不开放通用CRUD。
+
+更多请求样例和规则见 `TASK3_GUIDE.md`，静态OpenAPI已更新。

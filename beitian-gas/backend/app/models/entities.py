@@ -176,9 +176,23 @@ class WellStatusSnapshot(IdentityMixin, WellLinked, Base):
         CheckConstraint("screening_status IN ('可信正常', '疑似异常', '措施影响', '数据待核实', '工况待核实')", name="screening_status"),
     )
 
+class WellAnalysisResult(IdentityMixin, WellLinked, Base):
+    """每次任务的单井历史结果，与可更新的最新状态快照分离。"""
+    __tablename__ = "well_analysis_results"
+    analysis_run_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("analysis_runs.id", ondelete="RESTRICT"), index=True)
+    as_of: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    screening_status: Mapped[str] = mapped_column(String(40), index=True)
+    production_state: Mapped[str] = mapped_column(String(40))
+    evidence: Mapped[dict] = mapped_column(JSON)
+    __table_args__ = (
+        UniqueConstraint("analysis_run_id", "well_id", name="uq_analysis_result_run_well"),
+        CheckConstraint("screening_status IN ('可信正常', '疑似异常', '措施影响', '数据待核实', '工况待核实')", name="screening_status"),
+    )
+
+
 # 每个依井实体显式双向关联；数据库限制删除父记录，保留历史追溯。
 for cls in (WellConfigHistory, WellTool, WellMeasurement, WellMeasureEvent,
-            WellOperationEvent, WellFaultHistory, WellBaseline, WellAnomaly, WellStatusSnapshot):
+            WellOperationEvent, WellFaultHistory, WellBaseline, WellAnomaly, WellStatusSnapshot, WellAnalysisResult):
     attr = cls.__tablename__
     setattr(Well, attr, relationship(cls, back_populates="well", passive_deletes="all"))
     setattr(cls, "well", relationship(Well, back_populates=attr))
@@ -189,3 +203,5 @@ AnomalyReview.anomaly = relationship(WellAnomaly, back_populates="reviews")
 WellMeasurement.import_job = relationship(DataImportJob)
 WellBaseline.analysis_run = relationship(AnalysisRun)
 WellStatusSnapshot.analysis_run = relationship(AnalysisRun)
+
+WellAnalysisResult.analysis_run = relationship(AnalysisRun)

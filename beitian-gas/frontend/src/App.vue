@@ -9,7 +9,7 @@ import { navigation } from './router'
         <el-menu-item v-for="item in navigation" :key="item.path" :index="item.path">{{ item.name }}</el-menu-item>
       </el-menu>
     </el-aside>
-    <el-container><el-header>气井生产异常筛查 <el-tag type="info">任务2 · 数据接入</el-tag></el-header>
+    <el-container><el-header>气井生产异常筛查 <el-tag type="info">任务3 · 规则筛查</el-tag></el-header>
       <el-main><router-view /></el-main>
     </el-container>
   </el-container>

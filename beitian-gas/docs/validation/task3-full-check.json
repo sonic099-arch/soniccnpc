@@ -1,0 +1,418 @@
+{
+  "warning": "模拟数据验收，不代表现场筛查准确率",
+  "checks": [
+    {
+      "check": "1000井任务完成",
+      "pass": true
+    },
+    {
+      "check": "13场景1000样本状态及标签对照",
+      "pass": true
+    },
+    {
+      "check": "默认异常列表不含可信正常井且完整分页",
+      "pass": true,
+      "events": 1384
+    },
+    {
+      "check": "重复分析保留2000条历史结果，最新快照1000条，列表不重复",
+      "pass": true
+    },
+    {
+      "check": "新版本重算生效且历史结论与规则快照保留",
+      "pass": true
+    },
+    {
+      "check": "新迁移及服务就绪",
+      "pass": true
+    }
+  ],
+  "first_run": {
+    "id": "f84438dc-1ebc-4be2-b59f-5a711e40dcc1",
+    "status": "已完成",
+    "window_start": "2026-10-01T00:00:00+00:00",
+    "window_end": "2026-10-15T00:00:00+00:00",
+    "data_cutoff": "2026-10-22T15:22:04.911577+00:00",
+    "completed_at": "2026-10-22T15:22:31.856313+00:00",
+    "summary": {
+      "engine_version": "screening-v1",
+      "total_wells": 1000,
+      "reference": "以选定井最新采样为窗口终点，不表示当前实时状态",
+      "status_counts": {
+        "可信正常": 308,
+        "疑似异常": 385,
+        "措施影响": 77,
+        "数据待核实": 230,
+        "工况待核实": 0
+      },
+      "anomaly_events": 1384,
+      "rules_triggered": {
+        "FL001": 385,
+        "PR002": 154,
+        "TP001": 77,
+        "ME001": 77,
+        "ME002": 77,
+        "OP001": 77,
+        "DQ002": 77,
+        "DQ003": 153,
+        "SYS001": 230,
+        "DQ001": 77
+      },
+      "baseline_count": 1000,
+      "is_demo": true,
+      "warning": "模拟筛查结果不代表现场准确率；积液、冻堵仅辅助提示，所有异常需人工复核。"
+    },
+    "error_message": null,
+    "rule_snapshot": [
+      {
+        "id": "ee8686dc-ee77-497c-9152-8064dd10acd2",
+        "code": "SYS001",
+        "name": "工况与基线策略",
+        "version": "1.0.0",
+        "function_key": "context_policy",
+        "configuration": {
+          "sample_minutes": 60,
+          "lookback_hours": 336,
+          "evaluation_hours": 24,
+          "baseline_hours": 168,
+          "baseline_guard_hours": 72,
+          "minimum_samples": 48,
+          "baseline_min_samples": 24,
+          "zero_flow": 1.0,
+          "max_natural_decline_daily": 0.03,
+          "natural_decline_label_daily": 0.001,
+          "valid_modes": [
+            "自喷",
+            "泡排",
+            "间歇",
+            "注醇",
+            "其他排采"
+          ],
+          "known_tools": [
+            "井下节流器",
+            "速度管柱",
+            "柱塞",
+            "其他"
+          ],
+          "known_measures": [
+            "泡排",
+            "注醇",
+            "机械排液",
+            "其他排采"
+          ],
+          "transition_guard_hours": 2,
+          "merge_gap_hours": 3,
+          "max_window_hours": 2160,
+          "natural_decline_min_r2": 0.8
+        },
+        "applicable_states": [
+          "全部"
+        ],
+        "input_parameters": [
+          "生产配置",
+          "工具",
+          "措施",
+          "操作",
+          "历史故障"
+        ],
+        "enabled": true
+      },
+      {
+        "id": "4dca3270-3a4f-4d6d-968b-45783d906501",
+        "code": "DQ001",
+        "name": "采样完整性与可信度",
+        "version": "1.0.0",
+        "function_key": "data_quality",
+        "configuration": {
+          "required_fields": [
+            "tubing_pressure_mpa",
+            "casing_pressure_mpa",
+            "back_pressure_mpa",
+            "instantaneous_flow_m3_h",
+            "cumulative_flow_m3",
+            "gas_temperature_c"
+          ],
+          "minimum_recent_coverage": 1.0,
+          "max_gap_hours": 2,
+          "future_minutes": 5
+        },
+        "applicable_states": [
+          "全部"
+        ],
+        "input_parameters": [
+          "时间",
+          "油压",
+          "套压",
+          "回压",
+          "瞬时流量",
+          "累计流量",
+          "温度"
+        ],
+        "enabled": true
+      },
+      {
+        "id": "f5b98a61-9679-458f-aaaf-30069f8e80d3",
+        "code": "DQ002",
+        "name": "数据冻结识别",
+        "version": "1.0.0",
+        "function_key": "data_freeze",
+        "configuration": {
+          "freeze_hours": 12,
+          "value_tolerance": 1e-06
+        },
+        "applicable_states": [
+          "全部"
+        ],
+        "input_parameters": [
+          "七参数",
+          "时间"
+        ],
+        "enabled": true
+      },
+      {
+        "id": "76a7a049-9d3e-4e33-a39a-3cff6ca3698e",
+        "code": "DQ003",
+        "name": "累计量与瞬时流量一致性",
+        "version": "1.0.0",
+        "function_key": "meter_consistency",
+        "configuration": {
+          "relative_tolerance": 0.05,
+          "absolute_tolerance_m3": 1,
+          "reset_tolerance_m3": 0.01,
+          "max_interval_hours": 2
+        },
+        "applicable_states": [
+          "全部"
+        ],
+        "input_parameters": [
+          "瞬时流量",
+          "累计流量",
+          "时间"
+        ],
+        "enabled": true
+      },
+      {
+        "id": "83934041-55a5-4357-8b20-ee116e91eb87",
+        "code": "OP001",
+        "name": "计划与非计划停井识别",
+        "version": "1.0.0",
+        "function_key": "operation_state",
+        "configuration": {
+          "stopped_hours": 3
+        },
+        "applicable_states": [
+          "全部"
+        ],
+        "input_parameters": [
+          "瞬时流量",
+          "开关井操作",
+          "周期计划"
+        ],
+        "enabled": true
+      },
+      {
+        "id": "20ab5acf-a156-46b9-804d-ebbc262e9dba",
+        "code": "FL001",
+        "name": "持续减产与自然递减区分",
+        "version": "1.0.0",
+        "function_key": "flow_trend",
+        "configuration": {
+          "decline_ratio": 0.25,
+          "sustain_hours": 12
+        },
+        "applicable_states": [
+          "全部"
+        ],
+        "input_parameters": [
+          "瞬时流量",
+          "基线",
+          "生产方式"
+        ],
+        "enabled": true
+      },
+      {
+        "id": "25701641-19b5-4b8d-aa5c-2e42fe19d5c1",
+        "code": "PR001",
+        "name": "压力突变与异常波动",
+        "version": "1.0.0",
+        "function_key": "pressure_trend",
+        "configuration": {
+          "step_mpa": 1.2,
+          "range_mpa": 2.0,
+          "max_step_interval_hours": 2
+        },
+        "applicable_states": [
+          "全部"
+        ],
+        "input_parameters": [
+          "油压",
+          "套压",
+          "回压"
+        ],
+        "enabled": true
+      },
+      {
+        "id": "d8686598-849e-4e27-8566-161fc0353606",
+        "code": "PR002",
+        "name": "压力流量关联辅助提示",
+        "version": "1.0.0",
+        "function_key": "pressure_flow",
+        "configuration": {
+          "flow_ratio": 0.65,
+          "gap_growth_mpa": 1.0,
+          "pressure_change_mpa": 1.5,
+          "liquid_growth_m3_d": 0.5
+        },
+        "applicable_states": [
+          "全部"
+        ],
+        "input_parameters": [
+          "瞬时流量",
+          "油压",
+          "套压",
+          "回压",
+          "产液量"
+        ],
+        "enabled": true
+      },
+      {
+        "id": "9cbd1dba-7f10-467e-adc4-884d8141384c",
+        "code": "TP001",
+        "name": "低温压流关联辅助提示",
+        "version": "1.0.0",
+        "function_key": "temperature_trend",
+        "configuration": {
+          "low_temperature_c": 0,
+          "temperature_drop_c": 8,
+          "flow_ratio": 0.65,
+          "pressure_growth_mpa": 1.0,
+          "sustain_hours": 3,
+          "temperature_rise_c": 8
+        },
+        "applicable_states": [
+          "全部"
+        ],
+        "input_parameters": [
+          "温度",
+          "瞬时流量",
+          "油压"
+        ],
+        "enabled": true
+      },
+      {
+        "id": "b4cdbb24-d40e-4a72-9126-f954d9f6ca10",
+        "code": "ME001",
+        "name": "措施期间与恢复期识别",
+        "version": "1.0.0",
+        "function_key": "measure_period",
+        "configuration": {
+          "recovery_hours": 12
+        },
+        "applicable_states": [
+          "全部"
+        ],
+        "input_parameters": [
+          "措施类型",
+          "措施有效区间",
+          "动态参数"
+        ],
+        "enabled": true
+      },
+      {
+        "id": "9c8975a2-df26-4dca-9eea-bc9529bbf5fa",
+        "code": "ME002",
+        "name": "措施后恢复效果评估",
+        "version": "1.0.0",
+        "function_key": "measure_effect",
+        "configuration": {
+          "pre_hours": 24,
+          "post_hours": 24,
+          "minimum_post_samples": 12,
+          "effect_horizon_hours": 96,
+          "recovery_ratio": 0.8
+        },
+        "applicable_states": [
+          "全部"
+        ],
+        "input_parameters": [
+          "措施前后流量",
+          "措施有效区间"
+        ],
+        "enabled": true
+      }
+    ]
+  },
+  "samples_total": 1000,
+  "samples_passed": 1000,
+  "samples_failed": 0,
+  "failure_reasons": [],
+  "scenarios": {
+    "稳定自喷井": {
+      "total": 77,
+      "passed": 77,
+      "failed": 0
+    },
+    "自然递减井": {
+      "total": 77,
+      "passed": 77,
+      "failed": 0
+    },
+    "异常减产井": {
+      "total": 77,
+      "passed": 77,
+      "failed": 0
+    },
+    "疑似积液井": {
+      "total": 77,
+      "passed": 77,
+      "failed": 0
+    },
+    "疑似冻堵井": {
+      "total": 77,
+      "passed": 77,
+      "failed": 0
+    },
+    "正常泡排措施井": {
+      "total": 77,
+      "passed": 77,
+      "failed": 0
+    },
+    "泡排后生产效果不佳井": {
+      "total": 77,
+      "passed": 77,
+      "failed": 0
+    },
+    "周期性生产井": {
+      "total": 77,
+      "passed": 77,
+      "failed": 0
+    },
+    "计划停井": {
+      "total": 77,
+      "passed": 77,
+      "failed": 0
+    },
+    "非计划停井": {
+      "total": 77,
+      "passed": 77,
+      "failed": 0
+    },
+    "数据冻结井": {
+      "total": 77,
+      "passed": 77,
+      "failed": 0
+    },
+    "数据缺失井": {
+      "total": 77,
+      "passed": 77,
+      "failed": 0
+    },
+    "累计流量复位井": {
+      "total": 76,
+      "passed": 76,
+      "failed": 0
+    }
+  },
+  "recalculated_run_id": "d21e682b-5111-437e-b574-4b53689e10c6",
+  "elapsed_seconds": 108.01
+}

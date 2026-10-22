@@ -19,3 +19,11 @@ it('非JSON错误回退中文提示',async()=>{
  vi.stubGlobal('fetch',vi.fn().mockResolvedValue({ok:false,json:async()=>{throw Error()}}))
  await expect(request('/excel/preview')).rejects.toThrow('请求失败，请检查服务状态')
 })
+it('网络不可用时给出中文错误',async()=>{
+ vi.stubGlobal('fetch',vi.fn().mockRejectedValue(new TypeError('Failed to fetch')))
+ await expect(request('/analysis/runs')).rejects.toThrow('无法连接后端服务')
+})
+it('超时提示先核对任务结果，避免误以为已取消',async()=>{
+ vi.stubGlobal('fetch',vi.fn().mockRejectedValue(new DOMException('timeout','TimeoutError')))
+ await expect(request('/analysis/execute')).rejects.toThrow('请求超时，请稍后在任务记录中核对结果')
+})

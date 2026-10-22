@@ -1,8 +1,8 @@
 # 北田公司气井智能分析系统
 
-当前交付至 **任务2：可运行骨架、模拟数据生成与Excel确认导入**，默认演示规模已扩容至 **1000口井**。后端 Python 3.12 / FastAPI / SQLAlchemy / PostgreSQL，前端 Vue3 / TypeScript / Element Plus，已安装 ECharts，数据处理使用 Pandas / NumPy / OpenPyXL。
+当前交付至 **任务3：分析引擎、可配置规则与自动测试**，默认演示规模已扩容至 **1000口井**。后端 Python 3.12 / FastAPI / SQLAlchemy / PostgreSQL，前端 Vue3 / TypeScript / Element Plus，已安装 ECharts，数据处理使用 Pandas / NumPy / OpenPyXL。
 
-已实现14个实体、基础CRUD、迁移、1000井确定性模拟数据及带映射确认的Excel导入。异常分析引擎在任务3实现；首页统计、气井列表、异常列表及单井曲线在任务4实现。当前除Excel导入页外，业务页面仍明确显示占位提示。
+已实现15个实体、基础CRUD、迁移、1000井确定性模拟数据、Excel确认导入，以及10个分析模块、11条版本化规则、逐井筛查和证据追溯。网页可使用Excel导入、运行分析和规则配置；首页统计、气井列表、独立异常列表及单井曲线留在任务4。
 
 所有模拟数据、曲线、参数和预期标签均为演示用途，不构成现场工艺判定标准，也不能用于宣传生产异常筛查准确率。第七动态参数暂定“产液量”，尚待现场口径确认。
 
@@ -19,7 +19,7 @@ curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
 sudo apt install -y nodejs
 ```
 
-下载私有仓库需使用你自己的GitHub认证，不要将令牌写入仓库URL或源码：
+需要GitHub认证时使用你自己的凭据，不要将令牌写入仓库URL或源码：
 
 ```bash
 mkdir -p ~/projects
@@ -45,7 +45,7 @@ python scripts/dev.py
 - ReDoc：http://localhost:8000/redoc
 - 存活检查 `/health`；数据库迁移就绪 `/ready`。
 
-### 已有任务1代码时如何更新
+### 已有任务1或任务2代码时如何更新
 
 先在原启动终端按Ctrl+C，再执行：
 
@@ -61,7 +61,7 @@ cd ..
 python scripts/dev.py
 ```
 
-如果项目不在上述路径，替换为实际路径。`git pull` 提示本地修改时，先保存自己的改动，不要强制覆盖。任务2未改变实体列结构，现有 `0001_initial` 迁移仍适用，不需要删除数据库。
+如果项目不在上述路径，替换为实际路径。`git pull` 提示本地修改时，先保存自己的改动，不要强制覆盖。任务3新增 `0002_analysis_results` 迁移，快捷启动器会自动升级并保留已有井、测量与事件；不要删除数据库。手动部署需先运行 `alembic upgrade head`。
 
 ## 网页验证任务2
 
@@ -74,7 +74,21 @@ python scripts/dev.py
 5. 下载完整报告；有失败时，按Excel原始行号修正源文件后重新上传。
 6. 页面底部勾选演示数据确认，点击“生成并加载1000口演示井”。预期1000口井、335538条测量记录，以及配置、工具、措施和开关井事件。耗时可能为几十秒到几分钟，请等待。
 
-可通过Swagger的 `GET /api/v1/wells` 查询井，通过 `GET /api/v1/measurements?well_id=某井UUID` 查询测量，通过 `GET /api/v1/measure-events?well_id=某井UUID` 查询措施。这里只验证数据接入，尚未输出异常分析结果。
+可通过Swagger的 `GET /api/v1/wells` 查询井，通过 `GET /api/v1/measurements?well_id=某井UUID` 查询测量，通过 `GET /api/v1/measure-events?well_id=某井UUID` 查询措施。数据加载后，按下节执行任务3分析。
+
+## 网页验证任务3
+
+如果已经看到“生成完成：1000口井，335538条测量记录”，不要再次清库或重新生成，直接分析已有数据：
+
+1. 进入左侧 **运行分析**（http://localhost:5173/analysis），点击“初始化演示规则”。已有规则不会被覆盖。
+2. 工区、数据窗口先留空。勾选运行确认，点击“执行分析”，等待任务完成。
+3. 默认1000井批次预期：可信正常308、疑似异常385、措施影响77、数据待核实230、工况待核实0。额外导入/手动创建的井也参与分析，结果可能不同。
+4. 下方列表排除可信正常井；点击“证据”，查看规则版本、采样值、措施关联与技术追溯记录。
+5. 进入 **规则配置**，修改阈值并发布新版本，再回到运行分析重新执行；历史任务保留原规则和判断。
+
+默认分析窗口为2026-10-01至2026-10-15 UTC，按最新采样确定终点，不是当前实时时刻。时间窗口结束不含；网页结果显示北京时间。规则仍为演示参数，不能当作现场标准。
+
+详细规则、接口、测试和边界见 [任务3说明](docs/TASK3_GUIDE.md) 与 [任务3验收报告](docs/TASK3_REPORT.md)。
 
 ## 生成Excel与场景预期文件
 
@@ -139,7 +153,7 @@ cd ..
 python scripts/export_openapi.py
 ```
 
-后端测试只使用临时独立PostgreSQL，不访问`.env`数据库。前端测试包括真实组件交互，检查预览不写入、勾选确认后才允许提交、换文件清除旧确认状态。
+后端测试只使用临时独立PostgreSQL，不访问`.env`数据库。前端测试包括导入确认、执行分析、证据展示及规则版本发布的真实组件交互。修改核心分析算法后必须运行全部回归测试。
 
 可选的1000井整批验证（运行数分钟，独立临时数据库，结束后清理）：
 
@@ -149,10 +163,18 @@ python scripts/verify_demo.py --workbook work/mock1000/mock-data.xlsx --report w
 
 不传 `--workbook` 则自动生成默认1000井文件在内存中验证。静态接口契约位于 `docs/openapi.json`；历史报告保留，1000井扩容结果见 `docs/SCALE_1000_REPORT.md`。
 
+任务3的1000井分析验收（独立临时数据库，不改变已有开发库）：
+
+```bash
+python scripts/verify_analysis.py --report work/task3-full-check.json
+```
+
+该脚本加载335538条测量，执行三次完整分析，验证场景预期、默认列表去重、历史证据和新规则版本重算；耗时约两分钟，取决于机器性能。
+
 ## 目录与后续
 
-`backend/app/models`为14实体；`api`和`schemas`为基础接口；`data_sources`为Excel/Mock/Database统一接入；`services`为确认导入和演示装载；`migrations`为Alembic；`frontend/src/views/DataImport.vue`为可用导入页；`scripts`为启动、生成、验证和文档导出；`examples`为标准模板与模拟样本；`AGENTS.md`记录长期约束。
+`backend/app/models`为15实体；`api`和`schemas`为基础接口；`data_sources`为Excel/Mock/Database统一接入；`analysis`为分析算法与默认规则；`services`为导入、演示装载及分析持久化；`migrations`为Alembic；`frontend/src/views`包含导入、运行分析与规则配置页；`scripts`为启动、生成、验证和文档导出；`examples`为标准模板与模拟样本；`AGENTS.md`记录长期约束。
 
 代码同步至用户授权仓库 `sonic099-arch/soniccnpc` 的 `beitian-gas/`，保留仓库根README和历史；不提交 `.env`、虚拟环境、node_modules、本地数据库或用户上传的Excel。Excel暂存默认在 `work/imports`，可用 `IMPORT_STORAGE_DIR`更改，当前须由开发者按需清理；删除暂存文件后，未确认任务须重新上传。
 
-接下来按顺序完成任务3分析引擎、任务4业务页面及曲线、任务5联调验收；本次只交付到任务2。
+接下来是任务4业务页面及曲线、任务5联调验收；本次交付到任务3。

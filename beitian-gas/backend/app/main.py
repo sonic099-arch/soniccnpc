@@ -6,6 +6,7 @@ from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 from app.api.crud import create_crud_router
 from app.api.imports import router as import_router
+from app.api.analysis import router as analysis_router
 from app.api.resources import RESOURCES
 from app.core.config import get_settings
 from app.core.database import get_engine
@@ -14,8 +15,8 @@ from app.core.database import get_engine
 def create_app():
     application = FastAPI(
         title="北田公司气井智能分析系统",
-        description="第一阶段 · 任务2：模拟数据与Excel确认导入。当前不含生产异常分析能力，仅供本地开发。",
-        version="0.2.0",
+        description="第一阶段 · 任务3：可配置规则、筛查分析和证据追溯。演示阈值未经现场标定，仅供本地开发。",
+        version="0.3.0",
         openapi_tags=[{"name": label} for _, _, label in RESOURCES],
     )
     application.add_middleware(CORSMiddleware, allow_origins=get_settings().cors_origins,
@@ -32,17 +33,18 @@ def create_app():
 
     @application.get("/health", tags=["运行状态"], summary="服务存活检查")
     def health():
-        return {"status": "ok", "stage": "任务2"}
+        return {"status": "ok", "stage": "任务3"}
 
     @application.get("/ready", tags=["运行状态"], summary="数据库及迁移就绪检查")
     def ready():
         with get_engine().connect() as connection:
             revision = connection.scalar(text("SELECT version_num FROM alembic_version"))
-        if revision != "0001_initial":
+        if revision != "0002_analysis_results":
             return JSONResponse(status_code=503, content={"detail": "数据库迁移未就绪"})
         return {"status": "ok", "revision": revision}
 
     application.include_router(import_router)
+    application.include_router(analysis_router)
     for slug, model, label in RESOURCES:
         application.include_router(create_crud_router(slug, model, label), prefix="/api/v1")
     return application

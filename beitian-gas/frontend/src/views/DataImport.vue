@@ -35,7 +35,7 @@ async function generate(){
  loadingDemo.value=true;error.value=''
  try{
   const result=await request<{well_count:number;measurement_count:number;already_loaded:boolean;added_wells:number;added_measurements:number}>('/demo/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({confirmed:true,count:1000,days:14,seed:20261021})})
-  demoResult.value=`${result.already_loaded?'这批演示数据已存在，本次未重复写入':'生成完成'}：${result.well_count}口井，${result.measurement_count}条测量记录；本次新增${result.added_wells}口井、${result.added_measurements}条记录。尚未执行异常分析。`
+  demoResult.value=`${result.already_loaded?'这批演示数据已存在，本次未重复写入':'生成完成'}：${result.well_count}口井，${result.measurement_count}条测量记录；本次新增${result.added_wells}口井、${result.added_measurements}条记录。可进入“运行分析”初始化规则并执行筛查。`
  }catch(e){error.value=(e as Error).message}finally{loadingDemo.value=false}
 }
 </script>
@@ -86,7 +86,7 @@ async function generate(){
    <el-checkbox v-model="demoAcknowledged" :disabled="loadingDemo">确认向当前开发数据库写入演示数据</el-checkbox>
    <p><el-button :loading="loadingDemo" :disabled="!demoAcknowledged||busy" @click="generate">生成并加载1000口演示井</el-button></p>
    <el-alert v-if="demoResult" :title="demoResult" type="success" :closable="false"/>
-   <p>同一批数据重复生成不会重复写入；相同配置的600口演示井可直接扩容到1000口，保留原记录；配置不同会拒绝写入。异常分析将在任务3实现。</p>
+   <p>同一批数据重复生成不会重复写入；相同配置的600口演示井可直接扩容到1000口，保留原记录；配置不同会拒绝写入。<router-link to="/analysis">进入运行分析</router-link>，初始化规则后执行筛查。</p>
   </el-card>
  </div>
 </template>
