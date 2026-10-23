@@ -6,6 +6,14 @@
 
 所有模拟数据、曲线、参数和预期标签均为演示用途，不构成现场工艺判定标准，也不能用于宣传生产异常筛查准确率。第七动态参数暂定“产液量”，尚待现场口径确认。
 
+## 在指定内网运行（0.4.1增量）
+
+已提供Win11＋WSL单一入口 **http://10.86.36.43:8080**，只允许 **10.86.36.1–10.86.36.255**，网页与API统一校验真实TCP来源，不能靠伪造转发头绕过。构建网页和离线Swagger由本机后端提供，不开放Vite或数据库端口；复用现有work/dev-postgres。
+
+先按 [内网部署说明](docs/LAN_GUIDE.md) 在Ubuntu运行 `python scripts/lan.py`，再在Windows管理员PowerShell运行 `start_lan.ps1`。两个入口脚本应位于同一Windows目录。运行时不依赖外网CDN；断网重启可用 `--skip-build`。无需netsh端口转发。
+
+自动测试与真实Win11现场验证边界见 [内网验收报告](docs/LAN_REPORT.md)。任务4页面、任务3引擎继续可用，本次不推进全部任务5。
+
 ## Win11 + WSL2 Ubuntu 24.04 LTS
 
 以下命令在Ubuntu终端执行；项目建议放在Linux目录 `~/projects`，不与Windows共用虚拟环境。Python 3.14不在当前支持范围内。

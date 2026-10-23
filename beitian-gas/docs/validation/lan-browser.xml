@@ -1,0 +1,24 @@
+<testsuites id="" name="" tests="9" failures="0" skipped="0" errors="0" time="23.844054">
+<testsuite name="lan.spec.ts" timestamp="2026-10-23T05:51:41.398Z" hostname="" tests="3" failures="0" skipped="0" time="5.916" errors="0">
+<testcase name="构建网页与离线接口文档不加载外网资源" classname="lan.spec.ts" time="3.964">
+</testcase>
+<testcase name="生产静态页面深链接刷新和浏览器跳转不暴露源文件" classname="lan.spec.ts" time="1.894">
+</testcase>
+<testcase name="同源入口可下载Excel并上传预览，分析记录数量不受预览影响" classname="lan.spec.ts" time="0.058">
+</testcase>
+</testsuite>
+<testsuite name="screening.spec.ts" timestamp="2026-10-23T05:51:41.398Z" hostname="" tests="6" failures="0" skipped="0" time="16.968" errors="0">
+<testcase name="首页1001井统计及按状态下钻" classname="screening.spec.ts" time="2.171">
+</testcase>
+<testcase name="井号搜索、清空和正常井单井曲线" classname="screening.spec.ts" time="4.663">
+</testcase>
+<testcase name="异常列表按井汇总不含正常井，逐事件查看证据" classname="screening.spec.ts" time="3.136">
+</testcase>
+<testcase name="措施井七参数标线、事件关联、区间切换和真实SVG" classname="screening.spec.ts" time="2.756">
+</testcase>
+<testcase name="异常类型、工区及事件时间可筛选，刷新保留查询" classname="screening.spec.ts" time="2.257">
+</testcase>
+<testcase name="移动屏幕可访问首页和单井图表" classname="screening.spec.ts" time="1.985">
+</testcase>
+</testsuite>
+</testsuites>

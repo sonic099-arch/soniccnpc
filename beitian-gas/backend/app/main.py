@@ -14,10 +14,13 @@ from app.core.database import get_engine
 
 
 def create_app():
+    settings = get_settings()
     application = FastAPI(
         title="北田公司气井智能分析系统",
-        description="第一阶段 · 任务4：首页、井列表、异常列表和七参数曲线。演示阈值未经现场标定，仅供本地开发。",
-        version="0.4.0",
+        description="第一阶段 · 任务4：首页、井列表、异常列表和七参数曲线。演示阈值未经现场标定，仅供内部开发与演示。",
+        version="0.4.1",
+        docs_url=None if settings.serve_frontend else "/docs",
+        redoc_url=None if settings.serve_frontend else "/redoc",
         openapi_tags=[{"name": label} for _, _, label in RESOURCES],
     )
     application.add_middleware(CORSMiddleware, allow_origins=get_settings().cors_origins,
@@ -49,6 +52,9 @@ def create_app():
     application.include_router(screening_router)
     for slug, model, label in RESOURCES:
         application.include_router(create_crud_router(slug, model, label), prefix="/api/v1")
+    if settings.serve_frontend:
+        from app.api.web import mount_web
+        mount_web(application, settings.web_dist_dir)
     return application
 
 app = create_app()

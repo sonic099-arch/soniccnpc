@@ -6,6 +6,8 @@ import os
 from pathlib import Path
 import shutil
 import socket
+from threading import Thread
+from http.client import HTTPConnection
 import subprocess
 import sys
 import tempfile
@@ -38,7 +40,7 @@ def wait_http(url,process):
         time.sleep(.2)
     raise RuntimeError('验证服务启动超时')
 
-def verify(report,skip_browser=False):
+def verify(report,skip_browser=False,lan=False):
     root=Path(__file__).resolve().parents[1];work=root/'work';work.mkdir(exist_ok=True)
     temp=Path(tempfile.mkdtemp(prefix='beitian-web-verify-'))
     server=get_server(temp/'cluster',cleanup_mode='delete')
@@ -49,7 +51,7 @@ def verify(report,skip_browser=False):
     get_settings.cache_clear();get_engine.cache_clear()
     from app.main import create_app
     cfg=Config(str(root/'backend/alembic.ini'));cfg.set_main_option('script_location',str(root/'backend/migrations'))
-    engine=create_engine(url);children=[];log=None;started=time.monotonic()
+    engine=create_engine(url);children=[];entry=None;entry_thread=None;log=None;started=time.monotonic()
     result={'warning':'仅为模拟数据和开发环境验收，不代表现场准确率','checks':[]}
     def check(name,passed,**values):
         result['checks'].append({'check':name,'pass':bool(passed),**values})
@@ -97,15 +99,32 @@ def verify(report,skip_browser=False):
             env={**os.environ,'BEITIAN_API_URL':f'http://127.0.0.1:{api_port}','BEITIAN_WEB_URL':f'http://127.0.0.1:{web_port}'}
             if not env.get('PLAYWRIGHT_CHROMIUM_EXECUTABLE') and shutil.which('chromium'):
                 env['PLAYWRIGHT_CHROMIUM_EXECUTABLE']=shutil.which('chromium')
-            log=(work/'task4-server.log').open('w')
+            if lan:
+                from lan import build_frontend
+                dist=build_frontend(skip=True)
+                env.update(SERVE_FRONTEND='true',WEB_DIST_DIR=str(dist),BEITIAN_LAN_SMOKE='1',BEITIAN_BROWSER_REPORT='../work/lan-browser.xml')
+            log=(work/('lan-server.log' if lan else 'task4-server.log')).open('w')
             api=subprocess.Popen([sys.executable,'-m','uvicorn','app.main:app','--host','127.0.0.1','--port',str(api_port)],cwd=root/'backend',env=env,stdout=log,stderr=log)
             children.append(api);wait_http(f'http://127.0.0.1:{api_port}/ready',api)
-            web=subprocess.Popen(['node','node_modules/vite/bin/vite.js','--host','127.0.0.1','--port',str(web_port),'--strictPort'],cwd=root/'frontend',env=env,stdout=log,stderr=log)
-            children.append(web);wait_http(env['BEITIAN_WEB_URL'],web)
+            if lan:
+                from lan_gateway import GatewayConfig,GatewayServer
+                entry=GatewayServer(GatewayConfig(listen='127.0.0.1',port=web_port,upstream_port=api_port,allowed_start='127.0.0.1',allowed_end='127.0.0.1'))
+                entry_thread=Thread(target=entry.serve_forever,daemon=True);entry_thread.start()
+                # 本机测试使用127.0.0.1允许、127.0.0.2拒绝；发布默认范围另由35项边界/代理测试覆盖。
+                for path in ['/','/docs','/openapi.json','/api/v1/wells','/assets/no-such.js']:
+                    c=HTTPConnection('127.0.0.1',web_port,source_address=('127.0.0.2',0),timeout=5)
+                    c.request('GET',path,headers={'X-Forwarded-For':'127.0.0.1'})
+                    response=c.getresponse();assert response.status==403;response.read();c.close()
+                check('静态生产网页与全部接口入口拒绝越界源地址且伪造头无效',True)
+            else:
+                web=subprocess.Popen(['node','node_modules/vite/bin/vite.js','--host','127.0.0.1','--port',str(web_port),'--strictPort'],cwd=root/'frontend',env=env,stdout=log,stderr=log)
+                children.append(web);wait_http(env['BEITIAN_WEB_URL'],web)
             browser=subprocess.run(['npm','run','test:e2e'],cwd=root/'frontend',env=env)
-            check('Chromium六项真实页面端到端测试',browser.returncode==0)
+            check('Chromium九项构建网页与内网入口测试' if lan else 'Chromium六项真实页面端到端测试',browser.returncode==0)
         result['elapsed_seconds']=round(time.monotonic()-started,2)
     finally:
+        if entry:
+            entry.shutdown();entry.server_close();entry_thread.join(timeout=5)
         for child in children:
             child.terminate()
         for child in children:
@@ -120,6 +139,7 @@ def verify(report,skip_browser=False):
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--report',type=Path,default=Path('work/task4-full-check.json'))
+    parser.add_argument('--report',type=Path)
+    parser.add_argument('--lan',action='store_true',help='通过构建网页与IP限制入口验证，无需真实内网或修改防火墙')
     parser.add_argument('--skip-browser',action='store_true',help='仅运行全量API验证，不启动浏览器')
-    args=parser.parse_args();verify(args.report,args.skip_browser)
+    args=parser.parse_args();verify(args.report or Path('work/lan-full-check.json' if args.lan else 'work/task4-full-check.json'),args.skip_browser,args.lan)
