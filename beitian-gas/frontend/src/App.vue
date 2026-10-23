@@ -1,23 +1,23 @@
 <script setup lang="ts">
-import { navigation } from './router'
+import {computed} from 'vue'
+import {useRoute} from 'vue-router'
+import {navigation} from './router'
+const route=useRoute(),active=computed(()=>route.path.startsWith('/wells/')?'/wells':route.path)
 </script>
 <template>
-  <el-container class="layout">
-    <el-aside width="230px">
-      <h2>北田气井</h2><p class="subtitle">智能分析系统 · 第一阶段</p>
-      <el-menu router :default-active="$route.path">
-        <el-menu-item v-for="item in navigation" :key="item.path" :index="item.path">{{ item.name }}</el-menu-item>
-      </el-menu>
-    </el-aside>
-    <el-container><el-header>气井生产异常筛查 <el-tag type="info">任务3 · 规则筛查</el-tag></el-header>
-      <el-main><router-view /></el-main>
-    </el-container>
-  </el-container>
+ <el-container class="layout">
+  <el-aside width="220px" class="sidebar">
+   <div class="brand"><span class="brand-icon">北</span><div><strong>北田气井</strong><span>智能分析系统 · 第一阶段</span></div></div>
+   <p class="nav-caption">生产分析工作台</p>
+   <el-menu router :default-active="active" background-color="transparent" text-color="#b6cdc7" active-text-color="#ffffff"><el-menu-item v-for="item in navigation" :key="item.path" :index="item.path"><span class="nav-symbol" aria-hidden="true">{{item.symbol}}</span>{{item.name}}<small v-if="item.path==='/measures'" class="coming">后续</small></el-menu-item></el-menu>
+   <div class="sidebar-note"><span class="environment-dot"/>本地开发环境<p>演示参数仅供测试<br/>生产结论须人工核实</p></div>
+  </el-aside>
+  <el-container class="main-container"><el-header><span>气井生产异常筛查</span><div class="header-status"><span class="muted">筛查 · 追溯 · 复核</span><el-tag type="success" effect="plain">任务4 · 生产可视化</el-tag></div></el-header><el-main><router-view/></el-main><el-footer height="42px">北田公司气井智能分析系统　·　演示测试不代表现场准确率</el-footer></el-container>
+ </el-container>
 </template>
 <style>
-body{margin:0;font-family:"PingFang SC","Microsoft YaHei",sans-serif;color:#233c46;background:#f2f6f7}
-.layout{min-height:100vh} .el-aside{background:white;border-right:1px solid #e1e9eb}
-h2{padding:16px 24px 0;color:#17776d}.subtitle{padding:0 24px;color:#71848b;font-size:12px}
-.el-header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e1e9eb;background:white}
-.el-menu{border-right:0}.el-main{padding:32px}.el-card{max-width:1050px}p{line-height:1.8}
+:root{--el-color-primary:#177e70;--el-color-primary-light-3:#5aa69c;--el-color-primary-light-5:#8bbfb7;--el-color-primary-light-7:#b9d9d3;--el-color-primary-light-9:#edf6f3;--el-color-primary-dark-2:#12685c;--el-border-radius-base:6px;--el-font-family:"PingFang SC","Microsoft YaHei",sans-serif}
+*{box-sizing:border-box}body{margin:0;font-family:var(--el-font-family);color:#233e43;background:#f3f6f5;font-size:14px}a{color:#177e70;text-decoration:none}a:hover{text-decoration:underline}button:focus-visible,a:focus-visible{outline:2px solid #48b19e;outline-offset:3px}.layout{min-height:100vh}.sidebar{background:#163d36;position:sticky;top:0;height:100vh;color:#d8e9e4;flex-shrink:0}.brand{display:flex;gap:12px;align-items:center;padding:29px 23px 32px}.brand-icon{border:1px solid #7bb5a4;border-radius:8px;width:36px;height:40px;text-align:center;line-height:38px;color:#e1f0eb;font-size:22px}.brand strong{display:block;font-size:20px;letter-spacing:2px;font-weight:650}.brand div>span{display:block;font-size:10px;color:#9ab9af;margin-top:6px}.nav-caption{margin:10px 24px 14px;font-size:11px;letter-spacing:2px;color:#7fa296}.el-menu{border-right:0}.sidebar .el-menu-item{margin:5px 12px;border-radius:7px;height:46px;font-size:14px}.sidebar .el-menu-item:hover{background:#235247}.sidebar .el-menu-item.is-active{background:#2b6253}.nav-symbol{font-size:21px;width:27px;margin-right:9px;text-align:center}.coming{font-size:9px;line-height:16px;border:1px solid #54786b;color:#91b3a5;border-radius:3px;margin-left:8px;padding:0 3px}.sidebar-note{position:absolute;bottom:25px;left:25px;font-size:11px;color:#b0cbbf}.sidebar-note p{font-size:10px;color:#789f8e;line-height:1.9;margin:10px 0 0}.environment-dot{display:inline-block;width:6px;height:6px;background:#77c7a5;border-radius:50%;margin-right:8px}.main-container{min-width:0}.el-header{height:66px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e1e9e5;background:#fff;padding:0 32px;font-weight:550;gap:12px}.header-status{display:flex;gap:20px;align-items:center;font-weight:400;font-size:12px}.el-main{padding:28px 32px;overflow:visible}.el-footer{font-size:11px;color:#91a49e;display:flex;align-items:center;justify-content:center}.page{max-width:1800px;margin:0 auto}.page-heading{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:24px}.page-heading h1{font-size:26px;font-weight:650;letter-spacing:.5px;margin:8px 0 10px}.page-heading p{margin:0;line-height:1.8}.eyebrow{font-size:11px;color:#809990;letter-spacing:1px}.muted{color:#7b9093}.count-label{float:right;color:#829594;font-size:12px;font-weight:400}.el-card{max-width:none;border-color:#e0e8e4;border-radius:10px}.el-card__header{padding:18px 20px;font-size:14px;border-color:#edf1ee}.el-card__body{padding:20px}.el-alert{margin-bottom:16px}.el-pagination{margin-top:22px;justify-content:flex-end;flex-wrap:wrap}.well-link{font-weight:550}.demo-tag{margin-left:8px}.el-table{--el-table-header-bg-color:#f7f9f8;--el-table-header-text-color:#657c77;--el-table-border-color:#e9efec;--el-table-row-hover-bg-color:#f1f7f4}.el-table th.el-table__cell{font-size:12px;font-weight:500}.el-table .cell{line-height:1.8}p{line-height:1.8}.filter-panel .el-card__body{padding-bottom:14px}
+.report-select{height:32px;padding:0 26px 0 10px;border:1px solid #dcdfe6;border-radius:6px;background:#fff;color:#475e5a;font:inherit;width:160px;max-width:100%}.report-select:focus{outline:1px solid #177e70}.report-select:disabled{opacity:.6}.report-select.run-select{width:390px}.report-select.type-select{width:230px}
+@media(max-width:1000px){.header-status>.muted{display:none}.el-main{padding:22px}.sidebar{width:190px!important}.brand{padding-left:16px}.sidebar .el-menu-item{padding-left:14px!important}}@media(max-width:700px){.layout{display:block}.sidebar{position:relative;width:100%!important;height:auto}.brand{padding:16px 20px}.nav-caption,.sidebar-note{display:none}.sidebar .el-menu{display:flex;overflow-x:auto;padding:0 8px 8px}.sidebar .el-menu-item{flex-shrink:0;margin:2px;font-size:12px;height:36px;padding:0 10px!important}.nav-symbol,.coming{display:none}.el-header{padding:0 16px;height:56px;font-size:12px}.el-main{padding:16px}.page-heading h1{font-size:23px}.page-heading{align-items:flex-start;gap:12px}.page-heading>.el-button{margin-top:20px}.page-heading .muted{font-size:12px}.el-card__body{padding:14px}.el-footer{font-size:9px}}
 </style>

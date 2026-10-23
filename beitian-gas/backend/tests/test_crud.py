@@ -128,7 +128,7 @@ def test_rejects_nonfinite_values(client, records):
     assert client.post("/api/v1/measurements", json=data).status_code == 422
 
 def test_health_ready_and_openapi(client):
-    assert client.get("/health").json()["stage"] == "任务3"
+    assert client.get("/health").json()["stage"] == "任务4"
     assert client.get("/ready").json()["revision"] == "0002_analysis_results"
     schema = client.get("/openapi.json").json()
     assert schema["info"]["title"] == "北田公司气井智能分析系统"

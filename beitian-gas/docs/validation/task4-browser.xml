@@ -1,0 +1,16 @@
+<testsuites id="" name="" tests="6" failures="0" skipped="0" errors="0" time="19.457023999999997">
+<testsuite name="screening.spec.ts" timestamp="2026-10-23T04:22:32.077Z" hostname="" tests="6" failures="0" skipped="0" time="18.538" errors="0">
+<testcase name="首页1001井统计及按状态下钻" classname="screening.spec.ts" time="2.837">
+</testcase>
+<testcase name="井号搜索、清空和正常井单井曲线" classname="screening.spec.ts" time="4.852">
+</testcase>
+<testcase name="异常列表按井汇总不含正常井，逐事件查看证据" classname="screening.spec.ts" time="3.357">
+</testcase>
+<testcase name="措施井七参数标线、事件关联、区间切换和真实SVG" classname="screening.spec.ts" time="3.006">
+</testcase>
+<testcase name="异常类型、工区及事件时间可筛选，刷新保留查询" classname="screening.spec.ts" time="2.408">
+</testcase>
+<testcase name="移动屏幕可访问首页和单井图表" classname="screening.spec.ts" time="2.078">
+</testcase>
+</testsuite>
+</testsuites>

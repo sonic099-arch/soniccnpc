@@ -88,3 +88,24 @@ curl -X POST http://localhost:8000/api/v1/wells \
 基础CRUD继续供开发使用，但已使用规则的内容不能改写或删除，启用标记可调整；推荐版本接口。引擎任务、结果及已有复核记录不可改写，返回409。人工复核仍通过 `POST /api/v1/reviews` 追加；新实体WellAnalysisResult仅通过分析接口写入和读取，不开放通用CRUD。
 
 更多请求样例和规则见 `TASK3_GUIDE.md`，静态OpenAPI已更新。
+
+## 任务4只读展示接口
+
+统一前缀 `/api/v1/screening`：
+
+| 方法 | 路径 | 说明 |
+|---|---|---|
+| GET | /options | 全部工区、最近100次已完成引擎任务、所选任务事件类型与筛查状态 |
+| GET | /dashboard | 登记井、已分析井、五状态与未分析、各工区分布；不返回模拟常量 |
+| GET | /wells | 按井分页的台账；non_normal=true排除可信正常井，保留未分析 |
+| GET | /anomalies | 按事件分页；始终排除可信正常井，rule_code/version可追溯 |
+| GET | /wells/{well_id} | 单井信息、当前任务规则结果与历史证据；未参与本次任务时result=null |
+| GET | /wells/{well_id}/series | 七参数原始点、措施、操作、所选任务异常时间标记 |
+
+options及单井接口可传run_id；dashboard/wells/anomalies可传run_id、search、area、screening_status、anomaly_type、event_start/event_end。事件时间须含时区，采用半开区间重叠，开始/结束可以单独提供，同时提供须开始早于结束。气井/事件分页offset>=0、limit<=500；无记录返回空列表。search转义百分号和下划线，不作为SQL通配符。
+
+不传run_id时，按completed_at降序取最近完成的引擎任务；显式run_id不存在、未完成或为基础CRUD模拟任务时返回404。options仅列最近100次（额外保留显式选中的更早任务）；更早任务仍可通过run_id访问。此口径与任务3最新状态快照按数据窗口更新的语义不同，旧接口兼容保留。
+
+series支持window_start/window_end，默认所选任务窗口，无任务时回看该井最新测量之前14天。要求带时区、开始小于结束、最长90天、原始点最多20000个；超限返回422并要求缩短范围，绝不静默截断。不存在的井404。空值与非有限数返回null，累计量负跳变原样保留；图表用null断开缺口。时间标记以well UUID关联，措施/操作区间与窗口重叠即可返回，包括起点早于窗口的有效事件。
+
+所有接口只读，不重新计算规则或修改快照。曲线读取当前源表，历史规则证据来自WellAnalysisResult；应用暂无源数据完整不可变归档。`/health`的stage为任务4，数据库revision仍0002_analysis_results。

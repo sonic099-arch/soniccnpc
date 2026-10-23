@@ -9,8 +9,8 @@ onMounted(async()=>{try{ const data=await getHealth();health.value=data.status==
 <template>
   <el-card shadow="never">
     <template #header><strong>{{ route.name }}</strong></template>
-    <el-alert title="当前页面业务功能将在任务4实现；Excel导入页面现已可用" type="info" :closable="false" />
-    <p>数据模型和基础接口已建立。任务2已实现模拟数据与Excel导入，请从左侧进入“Excel导入”。任务3已实现分析引擎，请进入“运行分析”和“规则配置”。首页、气井及单井曲线等业务页面在任务4实现。</p>
+    <el-alert title="生产措施管理独立页面尚未实现，后续联调阶段补齐。" type="info" :closable="false" />
+    <p>当前可通过Excel导入加载演示措施，使用单井页面查看措施有效区间；新增、修改措施可使用后端接口文档中的“排采措施”接口。首页、气井列表、异常列表、单井曲线以及分析与规则配置现已可用。</p>
     <el-descriptions :column="1" border>
       <el-descriptions-item label="服务状态">{{ health }}</el-descriptions-item>
       <el-descriptions-item label="数据状态">当前页面尚未接入统计，请通过Excel导入页面生成演示数据</el-descriptions-item>

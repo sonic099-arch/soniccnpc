@@ -8,6 +8,7 @@ from app.api.crud import create_crud_router
 from app.api.imports import router as import_router
 from app.api.analysis import router as analysis_router
 from app.api.resources import RESOURCES
+from app.api.screening import router as screening_router
 from app.core.config import get_settings
 from app.core.database import get_engine
 
@@ -15,8 +16,8 @@ from app.core.database import get_engine
 def create_app():
     application = FastAPI(
         title="北田公司气井智能分析系统",
-        description="第一阶段 · 任务3：可配置规则、筛查分析和证据追溯。演示阈值未经现场标定，仅供本地开发。",
-        version="0.3.0",
+        description="第一阶段 · 任务4：首页、井列表、异常列表和七参数曲线。演示阈值未经现场标定，仅供本地开发。",
+        version="0.4.0",
         openapi_tags=[{"name": label} for _, _, label in RESOURCES],
     )
     application.add_middleware(CORSMiddleware, allow_origins=get_settings().cors_origins,
@@ -33,7 +34,7 @@ def create_app():
 
     @application.get("/health", tags=["运行状态"], summary="服务存活检查")
     def health():
-        return {"status": "ok", "stage": "任务3"}
+        return {"status": "ok", "stage": "任务4"}
 
     @application.get("/ready", tags=["运行状态"], summary="数据库及迁移就绪检查")
     def ready():
@@ -45,6 +46,7 @@ def create_app():
 
     application.include_router(import_router)
     application.include_router(analysis_router)
+    application.include_router(screening_router)
     for slug, model, label in RESOURCES:
         application.include_router(create_crud_router(slug, model, label), prefix="/api/v1")
     return application

@@ -10,4 +10,4 @@ export function runAnalysis(range:Date[],area:string){
  return request<Run>('/analysis/execute',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
 }
 export function initializeRules(){return request<{added:number;warning:string}>('/analysis/rules/bootstrap',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({confirmed:true})})}
-export function displayTime(value:string|undefined){if(!value||!Number.isFinite(Date.parse(value)))return '—';return new Date(value).toLocaleString('zh-CN',{timeZone:'Etc/GMT-8',hour12:false})}
+export function displayTime(value:string|null|undefined){if(!value||!Number.isFinite(Date.parse(value)))return '—';return new Date(value).toLocaleString('zh-CN',{timeZone:'Etc/GMT-8',hour12:false})}

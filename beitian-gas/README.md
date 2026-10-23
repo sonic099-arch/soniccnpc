@@ -1,8 +1,8 @@
 # 北田公司气井智能分析系统
 
-当前交付至 **任务3：分析引擎、可配置规则与自动测试**，默认演示规模已扩容至 **1000口井**。后端 Python 3.12 / FastAPI / SQLAlchemy / PostgreSQL，前端 Vue3 / TypeScript / Element Plus，已安装 ECharts，数据处理使用 Pandas / NumPy / OpenPyXL。
+当前交付至 **任务4：首页、气井列表、异常列表和单井7参数曲线**，默认演示规模已扩容至 **1000口井**。后端 Python 3.12 / FastAPI / SQLAlchemy / PostgreSQL，前端 Vue3 / TypeScript / Element Plus，已安装 ECharts，数据处理使用 Pandas / NumPy / OpenPyXL。
 
-已实现15个实体、基础CRUD、迁移、1000井确定性模拟数据、Excel确认导入，以及10个分析模块、11条版本化规则、逐井筛查和证据追溯。网页可使用Excel导入、运行分析和规则配置；首页统计、气井列表、独立异常列表及单井曲线留在任务4。
+已实现15个实体、基础CRUD、迁移、1000井确定性模拟数据、Excel确认导入，以及10个分析模块、11条版本化规则、逐井筛查和证据追溯。网页现已接入首页统计、全部气井列表、按井去重的异常列表、逐事件证据，以及单井7参数原始曲线。Excel导入、运行分析和规则配置继续可用；独立生产措施管理页面尚未实现，留待任务5联调补齐。
 
 所有模拟数据、曲线、参数和预期标签均为演示用途，不构成现场工艺判定标准，也不能用于宣传生产异常筛查准确率。第七动态参数暂定“产液量”，尚待现场口径确认。
 
@@ -45,7 +45,7 @@ python scripts/dev.py
 - ReDoc：http://localhost:8000/redoc
 - 存活检查 `/health`；数据库迁移就绪 `/ready`。
 
-### 已有任务1或任务2代码时如何更新
+### 已有代码时如何更新
 
 先在原启动终端按Ctrl+C，再执行：
 
@@ -61,7 +61,7 @@ cd ..
 python scripts/dev.py
 ```
 
-如果项目不在上述路径，替换为实际路径。`git pull` 提示本地修改时，先保存自己的改动，不要强制覆盖。任务3新增 `0002_analysis_results` 迁移，快捷启动器会自动升级并保留已有井、测量与事件；不要删除数据库。手动部署需先运行 `alembic upgrade head`。
+如果项目不在上述路径，替换为实际路径。`git pull` 提示本地修改时，先保存自己的改动，不要强制覆盖。任务4无新表或迁移，继续使用任务3的 `0002_analysis_results`。快捷启动器会升级到head并保留已有井、测量与事件；不要删除数据库。手动部署需先运行 `alembic upgrade head`。
 
 ## 网页验证任务2
 
@@ -89,6 +89,21 @@ python scripts/dev.py
 默认分析窗口为2026-10-01至2026-10-15 UTC，按最新采样确定终点，不是当前实时时刻。时间窗口结束不含；网页结果显示北京时间。规则仍为演示参数，不能当作现场标准。
 
 详细规则、接口、测试和边界见 [任务3说明](docs/TASK3_GUIDE.md) 与 [任务3验收报告](docs/TASK3_REPORT.md)。
+
+## 网页验证任务4
+
+已有1001井且分析得到308/385/77/231的用户，更新并重启即可查看，不需要重新导入或生成。
+
+- 系统首页 `/`：全部登记井、可信正常、疑似异常、措施影响、数据待核实、工况待核实及未分析数量；状态卡可进入井列表；同时展示状态分布和工区统计。
+- 气井列表 `/wells`：井号、工区、状态、生产状态与事件类型；井号搜索、工区/状态/异常类型筛选、事件时间过滤、分页及查看曲线。
+- 异常井列表 `/anomalies`：默认一井一行、排除可信正常井，措施影响和待核实也保留；可切换逐事件列表，打开规则证据。
+- 单井 `/wells/井UUID`：七条ECharts原始曲线，末7/14/30天或自选范围，统一时间轴联动缩放；蓝线标措施开始、浅蓝区标有效期、橙线标异常开始。查看措施、操作、异常和全部规则执行结果。
+
+四页使用相同“分析任务”口径，默认取最近完成的一次引擎任务（按完成时间），可以切换历史任务查看不同窗口。此默认值与旧 `/analysis/results` 的按数据窗口最新快照接口不同，避免先分析10月22日再改回10月15日后，首页仍显示旧窗口结果。原快照保护策略保持不变。
+
+已分析数量只计本次任务覆盖的井；未参与本次任务的登记井显示“未分析”，不借用旧任务结论。事件时间按区间重叠筛选，不重新分析。切换曲线范围也不会重新计算规则。曲线显示当前数据库保存的源采样，历史规则证据另存快照，二者不承诺源数据修改后的完整重放。
+
+详细操作、更新时间和浏览器验收见 [任务4使用说明](docs/TASK4_GUIDE.md) 与 [任务4验收报告](docs/TASK4_REPORT.md)。
 
 ## 生成Excel与场景预期文件
 
@@ -171,10 +186,22 @@ python scripts/verify_analysis.py --report work/task3-full-check.json
 
 该脚本加载335538条测量，执行三次完整分析，验证场景预期、默认列表去重、历史证据和新规则版本重算；耗时约两分钟，取决于机器性能。
 
+任务4完整API与真实Chromium页面验收（临时独立数据库，含1000演示井及1口手工井）：
+
+```bash
+# 首次运行浏览器测试时安装Chromium；普通启动网页不需要这一步
+cd frontend
+npx playwright install chromium
+cd ..
+python scripts/verify_web.py --report work/task4-full-check.json
+```
+
+若系统已安装Chromium，可设置 `PLAYWRIGHT_CHROMIUM_EXECUTABLE=/usr/bin/chromium`。可加 `--skip-browser` 仅运行全量API核验；不能将跳过浏览器的结果表述为浏览器测试通过。测试脚本通过临时随机端口启动服务，不接触已有work/dev-postgres或真实生产库。只测试当前已运行网页时可在frontend执行 `npm run test:e2e`，该测试要求固定1001井演示场景，勿用于真实生产环境。
+
 ## 目录与后续
 
-`backend/app/models`为15实体；`api`和`schemas`为基础接口；`data_sources`为Excel/Mock/Database统一接入；`analysis`为分析算法与默认规则；`services`为导入、演示装载及分析持久化；`migrations`为Alembic；`frontend/src/views`包含导入、运行分析与规则配置页；`scripts`为启动、生成、验证和文档导出；`examples`为标准模板与模拟样本；`AGENTS.md`记录长期约束。
+`backend/app/models`为15实体；`api`和`schemas`为基础接口；`data_sources`为Excel/Mock/Database统一接入；`analysis`为分析算法与默认规则；`services`为导入、演示装载及分析持久化；`migrations`为Alembic；`frontend/src/views`包含首页、井列表、异常列表、单井曲线、导入、运行分析与规则配置页；`scripts`为启动、生成、验证和文档导出；`examples`为标准模板与模拟样本；`AGENTS.md`记录长期约束。
 
 代码同步至用户授权仓库 `sonic099-arch/soniccnpc` 的 `beitian-gas/`，保留仓库根README和历史；不提交 `.env`、虚拟环境、node_modules、本地数据库或用户上传的Excel。Excel暂存默认在 `work/imports`，可用 `IMPORT_STORAGE_DIR`更改，当前须由开发者按需清理；删除暂存文件后，未确认任务须重新上传。
 
-接下来是任务4业务页面及曲线、任务5联调验收；本次交付到任务3。
+本次交付到任务4。下一步任务5进行联调、错误修复、完整验收和运行文档，补齐独立措施管理页面。

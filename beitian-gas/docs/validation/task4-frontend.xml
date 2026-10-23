@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="26" failures="0" errors="0" time="4.256821059">
+    <testsuite name="src/api.test.ts" timestamp="2026-10-23T04:22:14.641Z" hostname="0a15551bb42c" tests="2" failures="0" errors="0" skipped="0" time="0.00376455">
+        <testcase classname="src/api.test.ts" name="读取后端健康状态" time="0.00209206">
+        </testcase>
+        <testcase classname="src/api.test.ts" name="后端错误显示中文提示" time="0.000976372">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/chartOptions.test.ts" timestamp="2026-10-23T04:22:14.643Z" hostname="0a15551bb42c" tests="4" failures="0" errors="0" skipped="0" time="0.017322564">
+        <testcase classname="src/chartOptions.test.ts" name="保留空值和零值，缺口断线且不生成估算值" time="0.001475098">
+        </testcase>
+        <testcase classname="src/chartOptions.test.ts" name="七条曲线独立单位，累计复位不被平滑或强制单调" time="0.014013826">
+        </testcase>
+        <testcase classname="src/chartOptions.test.ts" name="窗口外措施开始不伪造标线，有效期裁剪到窗口，异常开始时刻保持原值" time="0.000795665">
+        </testcase>
+        <testcase classname="src/chartOptions.test.ts" name="无采样时仍有时间边界与事件标记" time="0.000285342">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/importApi.test.ts" timestamp="2026-10-23T04:22:14.644Z" hostname="0a15551bb42c" tests="6" failures="0" errors="0" skipped="0" time="0.008467646">
+        <testcase classname="src/importApi.test.ts" name="上传预览保留FormData，不错误设置JSON头" time="0.003596863">
+        </testcase>
+        <testcase classname="src/importApi.test.ts" name="确认配置保留单位和时区，移除未选字段" time="0.000360603">
+        </testcase>
+        <testcase classname="src/importApi.test.ts" name="接口错误显示服务端中文原因" time="0.001964231">
+        </testcase>
+        <testcase classname="src/importApi.test.ts" name="非JSON错误回退中文提示" time="0.000565976">
+        </testcase>
+        <testcase classname="src/importApi.test.ts" name="网络不可用时给出中文错误" time="0.000571223">
+        </testcase>
+        <testcase classname="src/importApi.test.ts" name="超时提示先核对任务结果，避免误以为已取消" time="0.000444306">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/views/AnalysisWorkbench.test.ts" timestamp="2026-10-23T04:22:14.646Z" hostname="0a15551bb42c" tests="2" failures="0" errors="0" skipped="0" time="1.013695583">
+        <testcase classname="src/views/AnalysisWorkbench.test.ts" name="必须确认才执行，显示真实任务统计并能打开判断证据" time="0.713128906">
+        </testcase>
+        <testcase classname="src/views/AnalysisWorkbench.test.ts" name="任务失败时显示服务端原因，不伪造统计" time="0.299485818">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/views/DataImport.test.ts" timestamp="2026-10-23T04:22:14.647Z" hostname="0a15551bb42c" tests="3" failures="0" errors="0" skipped="0" time="1.027610584">
+        <testcase classname="src/views/DataImport.test.ts" name="预览不会写入，只有勾选确认后才能执行导入并显示结果" time="0.655969309">
+            <system-err>
+[Vue warn]: Failed to resolve component: router-link
+If this is a native custom element, make sure to exclude it from component resolution via compilerOptions.isCustomElement. 
+  at &lt;DataImport ref=&quot;VTU_COMPONENT&quot; &gt; 
+  at &lt;VTUROOT&gt;
+
+[Vue warn]: Failed to resolve component: router-link
+If this is a native custom element, make sure to exclude it from component resolution via compilerOptions.isCustomElement. 
+  at &lt;DataImport ref=&quot;VTU_COMPONENT&quot; &gt; 
+  at &lt;VTUROOT&gt;
+
+Failed to resolve component: router-link
+If this is a native custom element, make sure to exclude it from component resolution via compilerOptions.isCustomElement. {} at &lt;DataImport&gt;
+at &lt;VTUROOT&gt; [
+  {
+    vnode: {
+      __v_isVNode: true,
+      __v_skip: true,
+      type: [Object],
+      props: [Object],
+      key: null,
+      ref: [Object],
+      scopeId: null,
+      slotScopeIds: null,
+      children: null,
+      component: [Object],
+      suspense: null,
+      ssContent: null,
+      ssFallback: null,
+      dirs: null,
+      transition: null,
+      el: [HTMLDivElement],
+      anchor: null,
+      target: null,
+      targetStart: null,
+      targetAnchor: null,
+      staticCount: 0,
+      shapeFlag: 4,
+      patchFlag: 0,
+      dynamicProps: null,
+      dynamicChildren: null,
+      appContext: null,
+      ctx: [Object]
+    },
+    recurseCount: 0
+  },
+  {
+    vnode: {
+      __v_isVNode: true,
+      __v_skip: true,
+      type: [Object],
+      props: null,
+      key: null,
+      ref: null,
+      scopeId: null,
+      slotScopeIds: null,
+      children: null,
+      component: [Object],
+      suspense: null,
+      ssContent: null,
+      ssFallback: null,
+      dirs: null,
+      transition: null,
+      el: [HTMLDivElement],
+      anchor: null,
+      target: null,
+      targetStart: null,
+      targetAnchor: null,
+      staticCount: 0,
+      shapeFlag: 4,
+      patchFlag: 0,
+      dynamicProps: null,
+      dynamicChildren: null,
+      appContext: [Object],
+      ctx: null
+    },
+    recurseCount: 0
+  }
+]
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/views/DataImport.test.ts" name="重新选择文件会清除旧预览和确认状态" time="0.36048346">
+            <system-err>
+[Vue warn]: Failed to resolve component: router-link
+If this is a native custom element, make sure to exclude it from component resolution via compilerOptions.isCustomElement. 
+  at &lt;DataImport ref=&quot;VTU_COMPONENT&quot; &gt; 
+  at &lt;VTUROOT&gt;
+
+[Vue warn]: Failed to resolve component: router-link
+If this is a native custom element, make sure to exclude it from component resolution via compilerOptions.isCustomElement. 
+  at &lt;DataImport ref=&quot;VTU_COMPONENT&quot; &gt; 
+  at &lt;VTUROOT&gt;
+
+Failed to resolve component: router-link
+If this is a native custom element, make sure to exclude it from component resolution via compilerOptions.isCustomElement. {} at &lt;DataImport&gt;
+at &lt;VTUROOT&gt; [
+  {
+    vnode: {
+      __v_isVNode: true,
+      __v_skip: true,
+      type: [Object],
+      props: [Object],
+      key: null,
+      ref: [Object],
+      scopeId: null,
+      slotScopeIds: null,
+      children: null,
+      component: [Object],
+      suspense: null,
+      ssContent: null,
+      ssFallback: null,
+      dirs: null,
+      transition: null,
+      el: [HTMLDivElement],
+      anchor: null,
+      target: null,
+      targetStart: null,
+      targetAnchor: null,
+      staticCount: 0,
+      shapeFlag: 4,
+      patchFlag: 0,
+      dynamicProps: null,
+      dynamicChildren: null,
+      appContext: null,
+      ctx: [Object]
+    },
+    recurseCount: 0
+  },
+  {
+    vnode: {
+      __v_isVNode: true,
+      __v_skip: true,
+      type: [Object],
+      props: null,
+      key: null,
+      ref: null,
+      scopeId: null,
+      slotScopeIds: null,
+      children: null,
+      component: [Object],
+      suspense: null,
+      ssContent: null,
+      ssFallback: null,
+      dirs: null,
+      transition: null,
+      el: [HTMLDivElement],
+      anchor: null,
+      target: null,
+      targetStart: null,
+      targetAnchor: null,
+      staticCount: 0,
+      shapeFlag: 4,
+      patchFlag: 0,
+      dynamicProps: null,
+      dynamicChildren: null,
+      appContext: [Object],
+      ctx: null
+    },
+    recurseCount: 0
+  }
+]
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/views/DataImport.test.ts" name="演示生成入口默认请求1000井，展示本次新增数量" time="0.010197046">
+            <system-err>
+[Vue warn]: Failed to resolve component: router-link
+If this is a native custom element, make sure to exclude it from component resolution via compilerOptions.isCustomElement. 
+  at &lt;DataImport ref=&quot;VTU_COMPONENT&quot; &gt; 
+  at &lt;VTUROOT&gt;
+
+            </system-err>
+        </testcase>
+    </testsuite>
+    <testsuite name="src/views/RuleConfiguration.test.ts" timestamp="2026-10-23T04:22:14.649Z" hostname="0a15551bb42c" tests="2" failures="0" errors="0" skipped="0" time="0.347144037">
+        <testcase classname="src/views/RuleConfiguration.test.ts" name="发布新版本携带完整配置，编辑过程不改写旧版" time="0.194919597">
+        </testcase>
+        <testcase classname="src/views/RuleConfiguration.test.ts" name="发布失败保留旧版并展示中文原因" time="0.151449616">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/views/ScreeningPages.test.ts" timestamp="2026-10-23T04:22:14.649Z" hostname="0a15551bb42c" tests="7" failures="0" errors="0" skipped="0" time="1.838816095">
+        <testcase classname="src/views/ScreeningPages.test.ts" name="首页展示服务端统计，点击状态卡保留所选任务进入井列表" time="0.109316524">
+        </testcase>
+        <testcase classname="src/views/ScreeningPages.test.ts" name="空库首页提示先分析，未分析不会伪装成可信正常" time="0.0261772">
+        </testcase>
+        <testcase classname="src/views/ScreeningPages.test.ts" name="气井搜索提交到接口，链接始终带分析任务，页码进入URL" time="0.474412945">
+        </testcase>
+        <testcase classname="src/views/ScreeningPages.test.ts" name="异常列表默认按井去重，切换事件后可追溯原始证据" time="0.356537791">
+        </testcase>
+        <testcase classname="src/views/ScreeningPages.test.ts" name="单井展示七条独立曲线、原规则和演示提示，切换天数传递准确时间" time="0.57314041">
+        </testcase>
+        <testcase classname="src/views/ScreeningPages.test.ts" name="单井空曲线明确提示缺数据，不创建七张虚构曲线" time="0.286226432">
+        </testcase>
+        <testcase classname="src/views/ScreeningPages.test.ts" name="接口错误显示中文且不会保留旧统计" time="0.012137275">
+        </testcase>
+    </testsuite>
+</testsuites>

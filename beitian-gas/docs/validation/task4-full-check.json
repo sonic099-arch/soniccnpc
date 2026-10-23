@@ -1,0 +1,455 @@
+{
+  "warning": "仅为模拟数据和开发环境验收，不代表现场准确率",
+  "checks": [
+    {
+      "check": "重现默认较晚窗口1001井数据待核实",
+      "pass": true
+    },
+    {
+      "check": "首页默认最新完成任务且1001井状态统计准确",
+      "pass": true
+    },
+    {
+      "check": "默认需复核井按井去重共693口",
+      "pass": true
+    },
+    {
+      "check": "历史任务可切换且旧结论保留",
+      "pass": true
+    },
+    {
+      "check": "1000演示井展示状态逐井对照",
+      "pass": true
+    },
+    {
+      "check": "七参数全量原始曲线及缺失/复位/措施场景",
+      "pass": true
+    },
+    {
+      "check": "Chromium六项真实页面端到端测试",
+      "pass": true
+    }
+  ],
+  "run_id": "cada409c-9607-4743-8554-75c43fcc0044",
+  "dashboard": {
+    "run": {
+      "id": "cada409c-9607-4743-8554-75c43fcc0044",
+      "status": "已完成",
+      "window_start": "2026-10-01T00:00:00+00:00",
+      "window_end": "2026-10-15T00:00:00+00:00",
+      "data_cutoff": "2026-10-23T04:21:56.617292+00:00",
+      "completed_at": "2026-10-23T04:22:23.606931+00:00",
+      "summary": {
+        "engine_version": "screening-v1",
+        "total_wells": 1001,
+        "reference": "指定数据窗口",
+        "status_counts": {
+          "可信正常": 308,
+          "疑似异常": 385,
+          "措施影响": 77,
+          "数据待核实": 231,
+          "工况待核实": 0
+        },
+        "anomaly_events": 1387,
+        "rules_triggered": {
+          "FL001": 385,
+          "PR002": 154,
+          "TP001": 77,
+          "ME001": 77,
+          "ME002": 77,
+          "OP001": 77,
+          "DQ002": 77,
+          "DQ003": 153,
+          "SYS001": 232,
+          "DQ001": 78
+        },
+        "baseline_count": 1000,
+        "is_demo": true,
+        "warning": "模拟筛查结果不代表现场准确率；积液、冻堵仅辅助提示，所有异常需人工复核。"
+      },
+      "error_message": null,
+      "rule_snapshot": [
+        {
+          "id": "8bb64850-a1ae-4972-a763-185a57bcab3e",
+          "code": "SYS001",
+          "name": "工况与基线策略",
+          "version": "1.0.0",
+          "function_key": "context_policy",
+          "configuration": {
+            "sample_minutes": 60,
+            "lookback_hours": 336,
+            "evaluation_hours": 24,
+            "baseline_hours": 168,
+            "baseline_guard_hours": 72,
+            "minimum_samples": 48,
+            "baseline_min_samples": 24,
+            "zero_flow": 1.0,
+            "max_natural_decline_daily": 0.03,
+            "natural_decline_label_daily": 0.001,
+            "valid_modes": [
+              "自喷",
+              "泡排",
+              "间歇",
+              "注醇",
+              "其他排采"
+            ],
+            "known_tools": [
+              "井下节流器",
+              "速度管柱",
+              "柱塞",
+              "其他"
+            ],
+            "known_measures": [
+              "泡排",
+              "注醇",
+              "机械排液",
+              "其他排采"
+            ],
+            "transition_guard_hours": 2,
+            "merge_gap_hours": 3,
+            "max_window_hours": 2160,
+            "natural_decline_min_r2": 0.8
+          },
+          "applicable_states": [
+            "全部"
+          ],
+          "input_parameters": [
+            "生产配置",
+            "工具",
+            "措施",
+            "操作",
+            "历史故障"
+          ],
+          "enabled": true
+        },
+        {
+          "id": "83140ed4-9511-49bc-9164-6ab7f4e85cb1",
+          "code": "DQ001",
+          "name": "采样完整性与可信度",
+          "version": "1.0.0",
+          "function_key": "data_quality",
+          "configuration": {
+            "required_fields": [
+              "tubing_pressure_mpa",
+              "casing_pressure_mpa",
+              "back_pressure_mpa",
+              "instantaneous_flow_m3_h",
+              "cumulative_flow_m3",
+              "gas_temperature_c"
+            ],
+            "minimum_recent_coverage": 1.0,
+            "max_gap_hours": 2,
+            "future_minutes": 5
+          },
+          "applicable_states": [
+            "全部"
+          ],
+          "input_parameters": [
+            "时间",
+            "油压",
+            "套压",
+            "回压",
+            "瞬时流量",
+            "累计流量",
+            "温度"
+          ],
+          "enabled": true
+        },
+        {
+          "id": "2254f030-0ea3-43d1-bfac-ff41c7930439",
+          "code": "DQ002",
+          "name": "数据冻结识别",
+          "version": "1.0.0",
+          "function_key": "data_freeze",
+          "configuration": {
+            "freeze_hours": 12,
+            "value_tolerance": 1e-06
+          },
+          "applicable_states": [
+            "全部"
+          ],
+          "input_parameters": [
+            "七参数",
+            "时间"
+          ],
+          "enabled": true
+        },
+        {
+          "id": "979aef69-f29b-4d3d-95ca-77aedb47b1b3",
+          "code": "DQ003",
+          "name": "累计量与瞬时流量一致性",
+          "version": "1.0.0",
+          "function_key": "meter_consistency",
+          "configuration": {
+            "relative_tolerance": 0.05,
+            "absolute_tolerance_m3": 1,
+            "reset_tolerance_m3": 0.01,
+            "max_interval_hours": 2
+          },
+          "applicable_states": [
+            "全部"
+          ],
+          "input_parameters": [
+            "瞬时流量",
+            "累计流量",
+            "时间"
+          ],
+          "enabled": true
+        },
+        {
+          "id": "2cfc0a26-a0eb-4639-86f6-fcf1a368d59e",
+          "code": "OP001",
+          "name": "计划与非计划停井识别",
+          "version": "1.0.0",
+          "function_key": "operation_state",
+          "configuration": {
+            "stopped_hours": 3
+          },
+          "applicable_states": [
+            "全部"
+          ],
+          "input_parameters": [
+            "瞬时流量",
+            "开关井操作",
+            "周期计划"
+          ],
+          "enabled": true
+        },
+        {
+          "id": "59f232d9-1a6a-4cd1-ab96-6ce05ee02686",
+          "code": "FL001",
+          "name": "持续减产与自然递减区分",
+          "version": "1.0.0",
+          "function_key": "flow_trend",
+          "configuration": {
+            "decline_ratio": 0.25,
+            "sustain_hours": 12
+          },
+          "applicable_states": [
+            "全部"
+          ],
+          "input_parameters": [
+            "瞬时流量",
+            "基线",
+            "生产方式"
+          ],
+          "enabled": true
+        },
+        {
+          "id": "e41f7f16-5bc3-4c14-96b2-9d4e7661686b",
+          "code": "PR001",
+          "name": "压力突变与异常波动",
+          "version": "1.0.0",
+          "function_key": "pressure_trend",
+          "configuration": {
+            "step_mpa": 1.2,
+            "range_mpa": 2.0,
+            "max_step_interval_hours": 2
+          },
+          "applicable_states": [
+            "全部"
+          ],
+          "input_parameters": [
+            "油压",
+            "套压",
+            "回压"
+          ],
+          "enabled": true
+        },
+        {
+          "id": "d501d03a-d0c0-46bc-95e0-c05d495fb178",
+          "code": "PR002",
+          "name": "压力流量关联辅助提示",
+          "version": "1.0.0",
+          "function_key": "pressure_flow",
+          "configuration": {
+            "flow_ratio": 0.65,
+            "gap_growth_mpa": 1.0,
+            "pressure_change_mpa": 1.5,
+            "liquid_growth_m3_d": 0.5
+          },
+          "applicable_states": [
+            "全部"
+          ],
+          "input_parameters": [
+            "瞬时流量",
+            "油压",
+            "套压",
+            "回压",
+            "产液量"
+          ],
+          "enabled": true
+        },
+        {
+          "id": "6d302a9c-85c4-46b3-8772-7a1958eb4814",
+          "code": "TP001",
+          "name": "低温压流关联辅助提示",
+          "version": "1.0.0",
+          "function_key": "temperature_trend",
+          "configuration": {
+            "low_temperature_c": 0,
+            "temperature_drop_c": 8,
+            "flow_ratio": 0.65,
+            "pressure_growth_mpa": 1.0,
+            "sustain_hours": 3,
+            "temperature_rise_c": 8
+          },
+          "applicable_states": [
+            "全部"
+          ],
+          "input_parameters": [
+            "温度",
+            "瞬时流量",
+            "油压"
+          ],
+          "enabled": true
+        },
+        {
+          "id": "32782d7d-3882-4408-969b-b890f25b8f5b",
+          "code": "ME001",
+          "name": "措施期间与恢复期识别",
+          "version": "1.0.0",
+          "function_key": "measure_period",
+          "configuration": {
+            "recovery_hours": 12
+          },
+          "applicable_states": [
+            "全部"
+          ],
+          "input_parameters": [
+            "措施类型",
+            "措施有效区间",
+            "动态参数"
+          ],
+          "enabled": true
+        },
+        {
+          "id": "f8f1f087-e013-4e5a-b4b1-3ac450255b4b",
+          "code": "ME002",
+          "name": "措施后恢复效果评估",
+          "version": "1.0.0",
+          "function_key": "measure_effect",
+          "configuration": {
+            "pre_hours": 24,
+            "post_hours": 24,
+            "minimum_post_samples": 12,
+            "effect_horizon_hours": 96,
+            "recovery_ratio": 0.8
+          },
+          "applicable_states": [
+            "全部"
+          ],
+          "input_parameters": [
+            "措施前后流量",
+            "措施有效区间"
+          ],
+          "enabled": true
+        }
+      ]
+    },
+    "total_wells": 1001,
+    "analyzed_wells": 1001,
+    "status_counts": {
+      "可信正常": 308,
+      "疑似异常": 385,
+      "措施影响": 77,
+      "数据待核实": 231,
+      "工况待核实": 0,
+      "未分析": 0
+    },
+    "areas": [
+      {
+        "area": "手工测试工区",
+        "screening_status": "数据待核实",
+        "count": 1
+      },
+      {
+        "area": "演示工区1",
+        "screening_status": "可信正常",
+        "count": 78
+      },
+      {
+        "area": "演示工区1",
+        "screening_status": "措施影响",
+        "count": 19
+      },
+      {
+        "area": "演示工区1",
+        "screening_status": "数据待核实",
+        "count": 57
+      },
+      {
+        "area": "演示工区1",
+        "screening_status": "疑似异常",
+        "count": 96
+      },
+      {
+        "area": "演示工区2",
+        "screening_status": "可信正常",
+        "count": 77
+      },
+      {
+        "area": "演示工区2",
+        "screening_status": "措施影响",
+        "count": 20
+      },
+      {
+        "area": "演示工区2",
+        "screening_status": "数据待核实",
+        "count": 57
+      },
+      {
+        "area": "演示工区2",
+        "screening_status": "疑似异常",
+        "count": 96
+      },
+      {
+        "area": "演示工区3",
+        "screening_status": "可信正常",
+        "count": 76
+      },
+      {
+        "area": "演示工区3",
+        "screening_status": "措施影响",
+        "count": 19
+      },
+      {
+        "area": "演示工区3",
+        "screening_status": "数据待核实",
+        "count": 58
+      },
+      {
+        "area": "演示工区3",
+        "screening_status": "疑似异常",
+        "count": 97
+      },
+      {
+        "area": "演示工区4",
+        "screening_status": "可信正常",
+        "count": 77
+      },
+      {
+        "area": "演示工区4",
+        "screening_status": "措施影响",
+        "count": 19
+      },
+      {
+        "area": "演示工区4",
+        "screening_status": "数据待核实",
+        "count": 58
+      },
+      {
+        "area": "演示工区4",
+        "screening_status": "疑似异常",
+        "count": 96
+      }
+    ],
+    "demo_wells": 1001,
+    "reference": "按所选分析任务展示；未参与本次任务的登记井单列未分析，历史结果不代表当前实时井况"
+  },
+  "samples_total": 1000,
+  "samples_passed": 1000,
+  "samples_failed": 0,
+  "failure_reasons": [],
+  "elapsed_seconds": 86.77
+}
